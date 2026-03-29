@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Panel (Static) - RFE</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        input, textarea { width: 100%; padding: 0.5rem; margin-bottom: 1rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); font-family: var(--font-mono); }
+        .admin-item { border: 1px solid var(--border-color); padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div id="login-screen" class="container" style="padding: 10rem 0; text-align: center;">
+        <h2 class="mono">ADMIN LOGIN</h2>
+        <input type="password" id="password" placeholder="Passwort" style="max-width: 300px; margin: 2rem auto; display: block;">
+        <button id="login-btn" class="mono">EINTRETEN</button>
+    </div>
+
+    <div id="admin-panel" class="container" style="display: none; padding: 4rem 0;">
+        <h2 class="mono" style="margin-bottom: 2rem;">PROTOKOLL MANAGEMENT (SUPABASE)</h2>
+        <div class="card" style="margin-bottom: 3rem;">
+            <h3 class="mono">NEUES LOKAL HINZUFÜGEN</h3>
+            <input type="text" id="new-lokal" placeholder="Name des Lokals">
+            <div style="display: flex; gap: 1rem;">
+                <input type="number" id="new-essen" placeholder="Essen (0-5)" min="0" max="5">
+                <input type="number" id="new-service" placeholder="Service (0-5)" min="0" max="5">
+                <input type="number" id="new-ambiente" placeholder="Ambiente (0-5)" min="0" max="5">
+            </div>
+            <textarea id="new-notitz" placeholder="Notitz"></textarea>
+            <button id="add-btn" class="mono">HINZUFÜGEN</button>
+        </div>
+        <div id="edit-list"></div>
+    </div>
+
+    <script>
+        // --- KONFIGURATION (Muss gleich sein wie in main.js) ---
+        const SUPABASE_URL = 'https://lezkdohngzxvuszcwcuj.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_KPIUCuONZw1laeyPpT4e_g_cwf06Fcb';
+        // ------------------------------------------------------
+
+        let reviews = [];
+
+        document.getElementById('login-btn').addEventListener('click', () => {
+            if (document.getElementById('password').value === 'ratte') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadAdminReviews();
+            } else {
+                alert('Falsches Passwort!');
+            }
+        });
+
+        async function loadAdminReviews() {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=*&order=id.desc`, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            reviews = await res.json();
+            renderAdminList();
+        }
+
+        function renderAdminList() {
+            const container = document.getElementById('edit-list');
+            container.innerHTML = '<h3 class="mono">EXISTIERENDE EINTRÄGE</h3>';
+            reviews.forEach((r, index) => {
+                const item = document.createElement('div');
+                item.className = 'admin-item';
+                item.innerHTML = `
+                    <p class="mono subtle">ID: ${r.id}</p>
+                    <input type="text" value="${r.lokal}" id="edit-lokal-${r.id}">
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="number" value="${r.essen}" id="edit-essen-${r.id}">
+                        <input type="number" value="${r.service}" id="edit-service-${r.id}">
+                        <input type="number" value="${r.ambiente}" id="edit-ambiente-${r.id}">
+                    </div>
+                    <textarea id="edit-notitz-${r.id}">${r.notitz}</textarea>
+                    <div style="display: flex; justify-content: space-between;">
+                        <button onclick="updateReview(${r.id})" class="mono" style="background: var(--primary-color); color: white;">UPDATE</button>
+                        <button onclick="deleteReview(${r.id})" class="mono" style="background: #e74c3c; color: white;">LÖSCHEN</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function updateReview(id) {
+            const updatedData = {
+                lokal: document.getElementById(`edit-lokal-${id}`).value,
+                essen: parseInt(document.getElementById(`edit-essen-${id}`).value),
+                service: parseInt(document.getElementById(`edit-service-${id}`).value),
+                ambiente: parseInt(document.getElementById(`edit-ambiente-${id}`).value),
+                notitz: document.getElementById(`edit-notitz-${id}`).value
+            };
+            await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
+                method: 'PATCH',
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData)
+            });
+            alert('Aktualisiert!');
+            loadAdminReviews();
+        }
+
+        async function deleteReview(id) {
+            if (confirm('Löschen?')) {
+                await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                loadAdminReviews();
+            }
+        }
+
+        document.getElementById('add-btn').addEventListener('click', async () => {
+            const newEntry = {
+                lokal: document.getElementById('new-lokal').value,
+                essen: parseInt(document.getElementById('new-essen').value) || 0,
+                service: parseInt(document.getElementById('new-service').value) || 0,
+                ambiente: parseInt(document.getElementById('new-ambiente').value) || 0,
+                notitz: document.getElementById('new-notitz').value || '(leer)'
+            };
+            await fetch(`${SUPABASE_URL}/rest/v1/reviews`, {
+                method: 'POST',
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(newEntry)
+            });
+            alert('Hinzugefügt!');
+            loadAdminReviews();
+        });
+    </script>
+</body>
+</html>

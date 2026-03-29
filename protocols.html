@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protokolle - Rattenfleischexperten</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="main.js"></script>
+</head>
+<body>
+    <header class="glass" style="position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; background: var(--header-bg); backdrop-filter: var(--glass-effect);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" style="font-size: 1.1rem; font-weight: bold; border: none; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="mono" style="color: var(--primary-color)">[RFE]</span>
+                <span>Rattenfleischexperten</span>
+            </a>
+            <nav style="display: flex; gap: 1.25rem; align-items: center;" class="mono">
+                <a href="protocols.html" style="color: var(--primary-color); font-weight: bold;">Protokolle</a>
+                <a href="council.html">Der Rat</a>
+                <a href="manifesto.html">Manifest</a>
+                <button id="theme-toggle" style="padding: 0.2rem 0.4rem; font-size: 0.8rem;">TAG</button>
+            </nav>
+        </div>
+    </header>
+
+    <main style="padding: 4rem 0;">
+        <section class="container">
+            <h2 class="mono" style="margin-bottom: 2rem; font-size: 1.5rem; border-bottom: 1px solid var(--text-color); display: inline-block;">
+                FELD_PRÜF_PROTOKOLLE
+            </h2>
+            
+            <div id="reviews-list">
+                <!-- Protokolle werden dynamisch geladen -->
+                <p class="mono">Protokolle werden geladen...</p>
+            </div>
+
+            <p class="subtle mono" style="text-align: center; margin-top: 3rem;">
+                --- ENDE DER PROTOKOLLE ---
+            </p>
+        </section>
+    </main>
+
+    <footer style="margin-top: auto; padding: 4rem 0; border-top: 1px solid var(--border-color); text-align: center;">
+        <div class="container">
+            <p class="mono" style="font-size: 0.9rem; margin-bottom: 1rem;">
+                &copy; 2026 RATTENFLEISCHEXPERTEN.
+            </p>
+            <div class="mono subtle" style="display: flex; gap: 1.5rem; justify-content: center; font-size: 0.75rem;">
+                <a href="#">[GIT]</a>
+                <a href="#">[RSS]</a>
+                <a href="mailto:rattenfleisch69@gmail.com">[EMAIL]</a>
+                <span>V1.0.4-TAIL</span>
+            </div>
+            <div style="margin-top: 2rem; opacity: 0.3; font-size: 1.2rem;">
+                🐀
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

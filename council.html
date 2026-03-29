@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Der Rat - Rattenfleischexperten</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="main.js"></script>
+</head>
+<body>
+    <header class="glass" style="position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; background: var(--header-bg); backdrop-filter: var(--glass-effect);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" style="font-size: 1.1rem; font-weight: bold; border: none; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="mono" style="color: var(--primary-color)">[RFE]</span>
+                <span>Rattenfleischexperten</span>
+            </a>
+            <nav style="display: flex; gap: 1.25rem; align-items: center;" class="mono">
+                <a href="protocols.html">Protokolle</a>
+                <a href="council.html" style="color: var(--primary-color); font-weight: bold;">Der Rat</a>
+                <a href="manifesto.html">Manifest</a>
+                <button id="theme-toggle" style="padding: 0.2rem 0.4rem; font-size: 0.8rem;">TAG</button>
+            </nav>
+        </div>
+    </header>
+
+    <main style="padding: 4rem 0;">
+        <section class="container">
+            <h2 class="mono" style="margin-bottom: 2rem; font-size: 1.5rem; border-bottom: 1px solid var(--text-color); display: inline-block;">
+                DER_RAT
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <!-- Member 1 -->
+                <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <img src="members/fette-Kanalratte.png" alt="Die Fette Kanalratte" style="width: 120px; height: 150px; border: 2px solid var(--border-color); object-fit: cover; background: var(--secondary-color);">
+                    <div>
+                        <h3 class="mono" style="font-size: 1.1rem; margin-bottom: 0.25rem;">Die Fette Kanalratte</h3>
+                        <p class="badge mono" style="font-size: 0.65rem; margin-bottom: 1rem;">Präsident</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Das oberste Oberhaupt der Rattenfleischexperten. Er überwacht alle Operationen und stellt sicher, dass die erlesene Rattenskala mit absoluter Präzision angewendet wird.</p>
+                    </div>
+                </div>
+
+                <!-- Member 2 -->
+                <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <img src="members/kleine-mäuserich.png" alt="Der Kleine Mäuserich" style="width: 120px; height: 150px; border: 2px solid var(--border-color); object-fit: cover; background: var(--secondary-color);">
+                    <div>
+                        <h3 class="mono" style="font-size: 1.1rem; margin-bottom: 0.25rem;">Der Kleine Mäuserich</h3>
+                        <p class="badge mono" style="font-size: 0.65rem; margin-bottom: 1rem;">Vize Präsident</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Die rechte Hand des Präsidenten. Spezialisiert auf die Identifizierung subtiler Nuancen in der Fleischqualität und Brot-Textur.</p>
+                    </div>
+                </div>
+
+                <!-- Member 3 -->
+                <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <img src="members/sir-nibblesworth.png" alt="Sir Nibblesworth" style="width: 120px; height: 150px; border: 2px solid var(--border-color); object-fit: cover; background: var(--secondary-color);">
+                    <div>
+                        <h3 class="mono" style="font-size: 1.1rem; margin-bottom: 0.25rem;">Sir Nibblesworth</h3>
+                        <p class="badge mono" style="font-size: 0.65rem; margin-bottom: 1rem;">Narr</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Ein wahrer Gentleman des Untergrunds. Er prüft Etablissements in den späten Nachtstunden, wenn der wahre Charakter der Speisen zum Vorschein kommt.</p>
+                    </div>
+                </div>
+
+                <!-- Member 4 -->
+                <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <img src="members/Hässlicher-ratterich.png" alt="Hässlicher Ratterich" style="width: 120px; height: 150px; border: 2px solid var(--border-color); object-fit: cover; background: var(--secondary-color);">
+                    <div>
+                        <h3 class="mono" style="font-size: 1.1rem; margin-bottom: 0.25rem;">Hässlicher Ratterich</h3>
+                        <p class="badge mono" style="font-size: 0.65rem; margin-bottom: 1rem;">Immun gegen Rattengift</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Der Biologe und Gesundheitsexperte der Gruppe. Er überwacht die Auswirkungen nach dem Konsum und sichert das Überleben des Rates.</p>
+                    </div>
+                </div>
+
+                <!-- Member 5 -->
+                <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <img src="members/ratcliff-jr.png" alt="Ratcliff jr." style="width: 120px; height: 150px; border: 2px solid var(--border-color); object-fit: cover; background: var(--secondary-color);">
+                    <div>
+                        <h3 class="mono" style="font-size: 1.1rem; margin-bottom: 0.25rem;">Ratcliff jr.</h3>
+                        <p class="badge mono" style="font-size: 0.65rem; margin-bottom: 1rem;">Fortnite Profi</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Der furchtlose Vorkoster, der jede fragwürdige Sauce probiert. Kein Risiko ist zu hoch für den perfekten Feldbericht.</p>
+                    </div>
+                </div>
+
+                <!-- Member 6 -->
+                <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <img src="members/Nagerbert-klaut-münzen.png" alt="Nagerbert Klaut Münzen" style="width: 120px; height: 150px; border: 2px solid var(--border-color); object-fit: cover; background: var(--secondary-color);">
+                    <div>
+                        <h3 class="mono" style="font-size: 1.1rem; margin-bottom: 0.25rem;">Nagerbert Klaut Münzen</h3>
+                        <p class="badge mono" style="font-size: 0.65rem; margin-bottom: 1rem;">Döner vernichter</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Der Mann fürs Grobe. Wenn er eine Prüfung beendet hat, bleibt nichts mehr von der Speise übrig. Bekannt für sein kompromissloses Urteil.</p>
+                    </div>
+                </div>
+
+                <!-- Member 7 -->
+                <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <img src="members/ratcliff-schmauser.png" alt="Ratcliff Schmauser" style="width: 120px; height: 150px; border: 2px solid var(--border-color); object-fit: cover; background: var(--secondary-color);">
+                    <div>
+                        <h3 class="mono" style="font-size: 1.1rem; margin-bottom: 0.25rem;">Ratcliff Schmauser (†2012)</h3>
+                        <p class="badge mono" style="font-size: 0.65rem; margin-bottom: 1rem;">Mentor</p>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Der legendäre Gründer, dessen Weisheit die Experten noch heute leitet. Sein Geist lebt in jeder Feldprüfung und jedem Rattenskala-Punkt weiter.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="subtle mono" style="text-align: center; margin-top: 4rem;">
+                Nur für autorisiertes Personal. Keine Rückerstattung.
+            </p>
+        </section>
+    </main>
+
+    <footer style="margin-top: auto; padding: 4rem 0; border-top: 1px solid var(--border-color); text-align: center;">
+        <div class="container">
+            <p class="mono" style="font-size: 0.9rem; margin-bottom: 1rem;">
+                &copy; 2026 RATTENFLEISCHEXPERTEN.
+            </p>
+            <div class="mono subtle" style="display: flex; gap: 1.5rem; justify-content: center; font-size: 0.75rem;">
+                <a href="#">[GIT]</a>
+                <a href="#">[RSS]</a>
+                <a href="mailto:rattenfleisch69@gmail.com">[EMAIL]</a>
+                <span>V1.0.4-TAIL</span>
+            </div>
+            <div style="margin-top: 2rem; opacity: 0.3; font-size: 1.2rem;">
+                🐀
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
