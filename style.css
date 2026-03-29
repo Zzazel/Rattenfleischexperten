@@ -179,13 +179,12 @@ nav a:hover, nav a[style*="bold"] {
   h2 { font-size: 1.6rem !important; }
   
   .container {
-    padding: 0 1rem;
+    padding: 0 0.75rem; /* Reduced from 1rem */
   }
 
   header .container {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   nav {

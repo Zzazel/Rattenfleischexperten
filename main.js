@@ -22,25 +22,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Protokolle dynamisch laden
+  // Protokolle dynamisch laden (Sowohl auf der Protokoll-Seite als auch auf Home für das Datum)
   const reviewsContainer = document.getElementById('reviews-list');
-  if (reviewsContainer) {
+  const lastAuditDisplay = document.getElementById('last-audit-date');
+  
+  if (reviewsContainer || lastAuditDisplay) {
     loadReviewsFromSupabase();
     
-    // Sorting Event Listeners
-    document.getElementById('sort-score')?.addEventListener('click', () => {
-      currentReviews.sort((a, b) => calculateTotalScore(b) - calculateTotalScore(a));
-      renderReviews(currentReviews);
-    });
-    
-    document.getElementById('sort-roi')?.addEventListener('click', () => {
-      currentReviews.sort((a, b) => {
-        const roiA = calculateTotalScore(a) / (a.cost || 1);
-        const roiB = calculateTotalScore(b) / (b.cost || 1);
-        return roiB - roiA;
+    // Sorting Event Listeners (nur wenn Container da ist)
+    if (reviewsContainer) {
+      document.getElementById('sort-score')?.addEventListener('click', () => {
+        currentReviews.sort((a, b) => calculateTotalScore(b) - calculateTotalScore(a));
+        renderReviews(currentReviews);
       });
-      renderReviews(currentReviews);
-    });
+      
+      document.getElementById('sort-roi')?.addEventListener('click', () => {
+        currentReviews.sort((a, b) => {
+          const roiA = calculateTotalScore(a) / (a.cost || 1);
+          const roiB = calculateTotalScore(b) / (b.cost || 1);
+          return roiB - roiA;
+        });
+        renderReviews(currentReviews);
+      });
+    }
   }
 
   // Secret Admin Access (Click rat in footer 3 times)
@@ -143,7 +147,20 @@ async function loadReviewsFromSupabase() {
     }
 
     currentReviews = await response.json();
-    renderReviews(currentReviews);
+    
+    // Update dynamic date on home page if element exists
+    const lastAuditDisplay = document.getElementById('last-audit-date');
+    if (lastAuditDisplay && currentReviews.length > 0) {
+      // Find latest date (first entry because of order=id.desc)
+      const latestReview = currentReviews[0];
+      const date = new Date(latestReview.created_at);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      lastAuditDisplay.textContent = date.toLocaleDateString('de-DE', options).toUpperCase();
+    } else if (lastAuditDisplay) {
+      lastAuditDisplay.textContent = 'NOCH KEINE DATEN';
+    }
+
+    if (container) renderReviews(currentReviews);
   } catch (error) {
     console.error("Ladefehler:", error);
     container.innerHTML = `<p class="mono">Fehler beim Laden: ${error.message}<br>Prüfe die Browser-Konsole (F12) für Details.</p>`;
