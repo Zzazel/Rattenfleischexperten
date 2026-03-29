@@ -65,55 +65,54 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function startRatEscape(originalRat) {
-  // 1. Create Hole at Top-Left (ensure it is within viewport)
+  const holeX = 20;
+  const holeY = 20;
+
+  // 1. Create Hole at Top-Left
   const hole = document.createElement('div');
   hole.className = 'mouse-hole';
-  document.body.appendChild(hole);
-
-  const holeX = 10;
-  const holeY = 10;
-  
   hole.style.left = holeX + 'px';
   hole.style.top = holeY + 'px';
   hole.style.display = 'block';
+  document.body.appendChild(hole);
 
   // 2. Create Running Rat Actor
   const rect = originalRat.getBoundingClientRect();
   const rat = document.createElement('div');
   rat.className = 'rat-actor';
   rat.textContent = '🐀';
+  
+  // Position exakt dort wo das Original ist (viewport coordinates)
   rat.style.left = rect.left + 'px';
-  rat.style.top = (rect.top + window.scrollY) + 'px'; // Fix for scroll position
+  rat.style.top = rect.top + 'px'; 
   document.body.appendChild(rat);
 
   // 3. Create Blackout Overlay
   const overlay = document.createElement('div');
   overlay.id = 'tunnel-overlay';
+  overlay.style.clipPath = `circle(0% at ${holeX + 30}px ${holeY + 15}px)`;
   document.body.appendChild(overlay);
 
   // Hide original
   originalRat.style.visibility = 'hidden';
 
-  // 4. Animate Rat to Hole (Top-Left)
+  // 4. Animate Rat to Hole
   setTimeout(() => {
-    rat.style.left = (holeX + 5) + 'px';
+    rat.style.left = (holeX + 10) + 'px';
     rat.style.top = (holeY + 5) + 'px';
-    rat.style.transform = 'scale(0.5) rotate(-45deg)';
+    rat.style.transform = 'scale(0.2) rotate(-45deg)';
     rat.style.opacity = '0';
   }, 50);
 
-  // 5. Start Blackout from Hole center (Top-Left)
+  // 5. Start Blackout as rat arrives
   setTimeout(() => {
-    overlay.style.clipPath = `circle(0% at ${holeX + 20}px ${holeY + 10}px)`;
-    setTimeout(() => {
-      overlay.style.clipPath = `circle(150% at ${holeX + 20}px ${holeY + 10}px)`;
-    }, 50);
-  }, 600);
+    overlay.style.clipPath = `circle(150% at ${holeX + 30}px ${holeY + 15}px)`;
+  }, 1300);
 
   // 6. Redirect
   setTimeout(() => {
     window.location.href = 'admin.html';
-  }, 1400);
+  }, 2500);
 }
 
 let currentReviews = [];
@@ -182,42 +181,37 @@ function renderReviews(reviews) {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
         <div>
-          <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">${review.lokal}</h3>
-          <div class="invest-tag">INVEST: ${review.cost || '??'} CHF</div>
-          <p class="subtle mono" style="margin-top: 0.5rem; font-size: 0.7rem;">ID: ${review.id}</p>
+          <h3 style="font-size: 1.75rem; margin-bottom: 0.5rem; text-transform: uppercase;">${review.lokal}</h3>
+          <div class="invest-tag">INVESTITION: ${review.cost || '??'} CHF</div>
         </div>
         <div class="audit-score-bubble">
-          <div class="mono" style="font-size: 0.6rem;">SCORE</div>
-          <div style="font-size: 1.8rem; font-weight: 900; line-height: 1;">${gesamt}</div>
-          <div style="font-size: 0.8rem;">🐀</div>
+          <div class="mono" style="font-size: 0.65rem; margin-bottom: 0.25rem;">Ψ_SCORE</div>
+          <div style="font-size: 2rem; font-weight: 800; line-height: 1;">${gesamt}</div>
         </div>
       </div>
       
-      <div class="protocol-grid" style="margin-bottom: 1.5rem; border-top: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); padding: 1rem 0;">
-        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">ESSEN (50%)</div><div class="mono" style="font-weight: bold; font-size: 1.1rem;">${review.essen}/5</div></div>
-        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">SERVICE (25%)</div><div class="mono" style="font-weight: bold; font-size: 1.1rem;">${review.service}/5</div></div>
-        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">AMBIENTE (25%)</div><div class="mono" style="font-weight: bold; font-size: 1.1rem;">${review.ambiente}/5</div></div>
+      <div class="protocol-grid" style="margin-bottom: 2rem; border-top: 1.5px solid var(--border-color); border-bottom: 1.5px solid var(--border-color); padding: 1.5rem 0;">
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">ESSEN (50%)</div><div style="font-weight: 700; font-size: 1.25rem;">${review.essen}/5</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">SERVICE (25%)</div><div style="font-weight: 700; font-size: 1.25rem;">${review.service}/5</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">AMBIENTE (25%)</div><div style="font-weight: 700; font-size: 1.25rem;">${review.ambiente}/5</div></div>
       </div>
 
       ${review.maps_url ? `
-        <div style="margin-bottom: 1.5rem; border-radius: var(--nibble-radius); overflow: hidden; height: 160px; border: 3px solid var(--border-color); filter: grayscale(0.5) contrast(1.2);">
+        <div style="margin-bottom: 2rem; height: 200px; border: 1.5px solid var(--border-color); filter: grayscale(1) contrast(1.1) brightness(0.9);">
           <iframe 
             src="${review.maps_url}" 
             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
-      ` : `
-        <div class="mono subtle" style="margin-bottom: 1.5rem; height: 40px; border: 2px dashed var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
-          [GEOLOKATION_NICHT_VERFÜGBAR]
-        </div>
-      `}
+      ` : ''}
 
-      <div style="padding: 1rem; background: var(--secondary-color); border-radius: var(--nibble-radius); font-size: 1rem; border: 2px solid var(--border-color); position: relative;">
-        <span class="mono" style="font-size: 0.7rem; position: absolute; top: -10px; left: 10px; background: var(--text-color); color: var(--bg-color); padding: 0 5px;">EXPERTEN-NOTITZ</span>
-        ${review.notitz}
+      <div style="font-size: 1.1rem; line-height: 1.6; font-style: italic; color: var(--accent-color); padding-right: 3rem;">
+        "${review.notitz}"
       </div>
+      
+      <div class="rat-mark">🐀</div>
     `;
     container.appendChild(card);
   });
