@@ -135,22 +135,25 @@ async function loadReviewsFromSupabase() {
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
           <div>
             <h3 style="font-size: 1.25rem;">${review.lokal}</h3>
             <p class="subtle mono">Lokal Audit • ID: ${review.id}</p>
           </div>
-          <div class="mono" style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color); border: 1px solid var(--border-color); padding: 0.2rem 0.5rem; border-radius: 4px;">
-            ${gesamt} 🐀
+          <div class="mono" style="text-align: right;">
+            <div class="subtle" style="font-size: 0.6rem; margin-bottom: 0.2rem;">AUDIT-SCORE</div>
+            <div style="font-size: 2rem; font-weight: 900; color: var(--primary-color); line-height: 1;">
+              ${gesamt} <span style="font-size: 1.2rem;">🐀</span>
+            </div>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.7rem;">ESSEN</div><div class="mono" style="font-weight: bold;">${review.essen}/5 🐀</div></div>
-          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.7rem;">SERVICE</div><div class="mono" style="font-weight: bold;">${review.service}/5 🐀</div></div>
-          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.7rem;">AMBIENTE</div><div class="mono" style="font-weight: bold;">${review.ambiente}/5 🐀</div></div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0;">
+          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">ESSEN</div><div class="mono" style="font-weight: bold;">${review.essen}/5 🐀</div></div>
+          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">SERVICE</div><div class="mono" style="font-weight: bold;">${review.service}/5 🐀</div></div>
+          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">AMBIENTE</div><div class="mono" style="font-weight: bold;">${review.ambiente}/5 🐀</div></div>
         </div>
-        <div style="padding: 0.75rem; background: var(--secondary-color); border-radius: 4px; font-size: 0.9rem;">
-          <span class="mono subtle" style="font-size: 0.7rem; display: block; margin-bottom: 0.25rem;">NOTITZ:</span>
+        <div style="padding: 0.75rem; background: var(--secondary-color); border-radius: 4px; font-size: 0.9rem; border-left: 2px solid var(--primary-color);">
+          <span class="mono subtle" style="font-size: 0.7rem; display: block; margin-bottom: 0.25rem;">EXPERTEN-NOTITZ:</span>
           ${review.notitz}
         </div>
       `;

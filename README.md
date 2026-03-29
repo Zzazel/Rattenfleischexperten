@@ -1,50 +1,42 @@
-# Modern Fast Website Base
+# [RFE] RATTENFLEISCHEXPERTEN - INTERNE DOKUMENTATION
 
-A rudimentary base for a modern, high-performance website built with **React**, **TypeScript**, **Vite**, and **Vanilla CSS**.
+## STATUS: TOP SECRET // RAT-LEVEL CLEARANCE REQUIRED
 
-## Features
+Dies ist das offizielle Repository der **Rattenfleischexperten (RFE)**. Wir sind eine hochspezialisierte, unabhängige Taskforce zur Auditierung zweifelhafter gastronomischer Einrichtungen (Dönerbuden, Spätis, Imbisswagen). 
 
-- ⚡️ **Vite Powered**: Instant HMR and fast builds.
-- 📘 **TypeScript**: Type safety out of the box.
-- 🎨 **Vanilla CSS**: Minimal bundle size with CSS variables for easy styling.
-- 🌓 **Dark Mode**: Integrated light/dark theme switching.
-- 📱 **Responsive**: Mobile-first design.
-- 🧼 **Clean Code**: No heavy UI libraries or complicated state management.
+Unsere Mission: Die Wahrheit hinter der Currysauce finden.
 
-## Getting Started
+---
 
-### Prerequisites
+## 🏗 TECHNISCHE ARCHITEKTUR (DER BAU)
 
-- [Node.js](https://nodejs.org/) (v18 or newer)
-- npm (included with Node.js)
+Unsere Infrastruktur ist so robust wie eine Kanalratte im Winter:
+- **Core:** Pures, ungezähmtes HTML5 & Vanilla CSS (Kein Framework-Müll, wir haben Hunger, keine Zeit für NPM-Installationsorgien).
+- **Intelligence:** `main.js` steuert die Datenströme und die geheimen Fluchtmanöver.
+- **Archive:** Supabase REST-API (Weil wir unsere Protokolle sicher vor dem Gesundheitsamt verwahren müssen).
+- **Design:** "Indie Web" – Minimalismus für maximale Effizienz beim Flüchten.
 
-### Installation
+## 🐀 DIE RATTEN-SKALA
 
-1.  Clone or copy the files to your local directory.
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
+Jedes Audit wird nach den heiligen drei Metriken bewertet:
+1. **Essen:** Ist es Fleisch? Ist es Ratte? Ist es lecker? (0-5 🐀)
+2. **Service:** Wurdest du ignoriert? Wurdest du beleidigt? Perfekt. (0-5 🐀)
+3. **Ambiente:** Klebt der Boden? Flackert das Licht? (0-5 🐀)
 
-### Development
+**DER GESAMT-SCORE:** Die einzige Zahl, die wirklich zählt. Berechnet durch komplexe Algorithmen (Durchschnittsbildung, aber wir nennen es "Expertise").
 
-Run the development server:
-```bash
-npm run dev
-```
+## 🛠 INSTALLATION & WARTUNG
 
-### Building for Production
+1. **Den Bau betreten:** Klone dieses Repo.
+2. **Die Vorräte prüfen:** Öffne `main.js` und trage deine Supabase-Zugangsdaten ein (sonst bleiben die Teller leer).
+3. **Einsatz:** Schiebe den ganzen Kram auf einen statischen Hoster (Netlify, Vercel, oder den Hinterhof-Server deines Vertrauens).
 
-Create an optimized build:
-```bash
-npm run build
-```
+## 🤫 GEHEIMNISSE (NICHT WEITERSAGEN)
 
-## Project Structure
+- Wer die Ratte im Footer drei Mal anklickt, löst das **PROPORTIONAL-REAKTIONS-MANÖVER** aus.
+- Der Zugang zum Admin-Panel ist nur für autorisierte Nager bestimmt.
+- Fragen? Schreib an `rattenfleisch69@gmail.com`.
 
-- `src/components`: Reusable UI components.
-- `src/App.tsx`: Main application entry and layout.
-- `src/index.css`: Global styles and CSS variables.
-- `index.html`: Main HTML entry point.
-- `vite.config.ts`: Vite configuration.
-- `tsconfig.json`: TypeScript configuration.
+---
+
+> "Im Zweifel war es Ratte." — *Der Rat der Experten*
