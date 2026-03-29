@@ -199,13 +199,17 @@ function renderReviews(reviews) {
       </div>
 
       ${review.maps_url ? `
-        <div style="margin-bottom: 2rem; height: 200px; border: 1.5px solid var(--border-color); filter: grayscale(1) contrast(1.1) brightness(0.9);">
+        <div style="margin-bottom: 2rem; height: 250px; border: 2px solid var(--border-color);">
           <iframe 
             src="${review.maps_url}" 
             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
-      ` : ''}
+      ` : `
+        <div class="mono subtle" style="margin-bottom: 2rem; padding: 2rem; border: 2px dashed var(--border-color); text-align: center; font-size: 0.7rem;">
+          [GEOLOKATION_NICHT_VERFÜGBAR_ODER_GEHEIM]
+        </div>
+      `}
 
       <div style="font-size: 1.1rem; line-height: 1.6; font-style: italic; color: var(--accent-color); padding-right: 3rem;">
         "${review.notitz}"
