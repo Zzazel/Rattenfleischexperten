@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Das Manifest - Rattenfleischexperten</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <script type="module" src="main.js"></script>
 </head>
 <body>
@@ -39,14 +45,26 @@
 
                 <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">Das Testverfahren</h3>
                 <div style="margin-bottom: 2.5rem;">
-                    <h4 class="mono" style="color: var(--primary-color); margin-bottom: 0.5rem;">-Schritt 1</h4>
-                    <p style="margin-bottom: 1.5rem;">Mit unserem über Jahrzehnte geschulten Rattengeruchssinn erfassen wir das lokale Bouquet, welches uns erste Einblicke in folgende Aspekte gewährt: Geschmack, Atmosphäre und das Schwitzverhalten des Besitzers.</p>
+                    <h4 class="mono" style="color: var(--primary-color); margin-bottom: 0.5rem;">-Schritt 1: DIE INITIAL-SENSORIK</h4>
+                    <p style="margin-bottom: 1.5rem;">Mit unserem über Jahrzehnte geschulten Rattengeruchssinn erfassen wir das lokale Bouquet. Wir analysieren die molekulare Dichte des Fettdampfes und korrelieren diese mit dem Schwitzverhalten des Besitzers (SDB-Koeffizient).</p>
                     
-                    <h4 class="mono" style="color: var(--primary-color); margin-bottom: 0.5rem;">-Schritt 2</h4>
-                    <p style="margin-bottom: 1.5rem;">Mit offensichtlicher Hingabe geniessen wir unser Mittagsmahl und meisseln das kulinarische Erlebnis tief in unser Gedächtnis.</p>
+                    <h4 class="mono" style="color: var(--primary-color); margin-bottom: 0.5rem;">-Schritt 2: DIE KULINARISCHE ABSORPTION</h4>
+                    <p style="margin-bottom: 1.5rem;">Unter Einsatz maximaler Hingabe wird die Materie in den Organismus überführt. Jede Geschmacksnuance wird in Echtzeit in unser neurales Langzeitgedächtnis eingraviert.</p>
                     
-                    <h4 class="mono" style="color: var(--primary-color); margin-bottom: 0.5rem;">-Schritt 3</h4>
-                    <p style="margin-bottom: 1.5rem;">Auf Grundlage der sorgfältig gesammelten Daten bewerten wir nun das Ergebnis auf unserer erlesenen Rattenskala, wobei sowohl der Geschmack als auch das Preis-Leistungs-Verhältnis berücksichtigt werden.</p>
+                    <h4 class="mono" style="color: var(--primary-color); margin-bottom: 0.5rem;">-Schritt 3: DIE QUANTEN-KALKULATION (SCORE)</h4>
+                    <p style="margin-bottom: 1.5rem;">Die finale Bewertung unterliegt nicht der menschlichen Willkür, sondern folgt dem **Rattenspektrum-Modell der gewichteten Realität**. Zur Bestimmung der absoluten Wahrheit (Total Score $\Psi$) nutzen wir folgende Feldtheorie:</p>
+                    
+                    <div class="card mono" style="background: var(--secondary-color); font-size: 0.8rem; padding: 1.5rem; border-left: 4px solid var(--primary-color); margin-bottom: 1.5rem;">
+                        <div style="font-weight: bold; margin-bottom: 0.5rem;">FORMEL: Ψ = (0.5 * E) + (0.25 * A) + (0.25 * S)</div>
+                        <p class="subtle" style="font-size: 0.7rem;">
+                            E = Kulinarische Entropie (Essen)<br>
+                            A = Atmosphärische Resonanz (Ambiente)<br>
+                            S = Sozialer Interaktionsvektor (Service)
+                        </p>
+                        <p style="margin-top: 1rem; font-style: italic;">
+                            Hierbei wird die Nahrungskomponente mit einer Dominanz von 50% gewichtet, da die rein biologische Energiezufuhr die Basis jeder Existenz bildet. Ambiente und Service wirken als destabilisierende oder harmonisierende Feldvariablen mit jeweils 25%.
+                        </p>
+                    </div>
                 </div>
 
                 <h3 style="font-size: 2rem; margin-bottom: 1.5rem;">Der Ratten-Standard</h3>

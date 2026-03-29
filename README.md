@@ -1,42 +1,67 @@
-# [RFE] RATTENFLEISCHEXPERTEN - INTERNE DOKUMENTATION
+# [RFE] RATTENFLEISCHEXPERTEN - SYSTEM-PROTOKOLL V2.2
 
-## STATUS: TOP SECRET // RAT-LEVEL CLEARANCE REQUIRED
+## STATUS: STRENG GEHEIM // RATTEN-LEVEL ZUGRIFF
 
-Dies ist das offizielle Repository der **Rattenfleischexperten (RFE)**. Wir sind eine hochspezialisierte, unabhängige Taskforce zur Auditierung zweifelhafter gastronomischer Einrichtungen (Dönerbuden, Spätis, Imbisswagen). 
-
-Unsere Mission: Die Wahrheit hinter der Currysauce finden.
+Diese Dokumentation definiert die operativen Standards für die Auditierung von Verpflegungsstationen (Imbisswagen, Döner-Silos, Untergrund-Küchen). Jedes Mitglied des Rats hat sich strikt an diese Metriken zu halten.
 
 ---
 
-## 🏗 TECHNISCHE ARCHITEKTUR (DER BAU)
+## 📊 DIE ULTIMATIVE METRIK (Ψ)
 
-Unsere Infrastruktur ist so robust wie eine Kanalratte im Winter:
-- **Core:** Pures, ungezähmtes HTML5 & Vanilla CSS (Kein Framework-Müll, wir haben Hunger, keine Zeit für NPM-Installationsorgien).
-- **Intelligence:** `main.js` steuert die Datenströme und die geheimen Fluchtmanöver.
-- **Archive:** Supabase REST-API (Weil wir unsere Protokolle sicher vor dem Gesundheitsamt verwahren müssen).
-- **Design:** "Indie Web" – Minimalismus für maximale Effizienz beim Flüchten.
+In unseren Berichten ist nur eine Zahl wirklich gesetzgebend. Einzelne Bewertungen sind lediglich dekoratives Beiwerk für die Akte.
 
-## 🐀 DIE RATTEN-SKALA
+**DER TOTAL SCORE (Ψ)**:
+Der Score wird nach der geheimen Experten-Feldtheorie berechnet:
+> **`Ψ = (0.5 * Essen) + (0.25 * Ambiente) + (0.25 * Service)`**
 
-Jedes Audit wird nach den heiligen drei Metriken bewertet:
-1. **Essen:** Ist es Fleisch? Ist es Ratte? Ist es lecker? (0-5 🐀)
-2. **Service:** Wurdest du ignoriert? Wurdest du beleidigt? Perfekt. (0-5 🐀)
-3. **Ambiente:** Klebt der Boden? Flackert das Licht? (0-5 🐀)
-
-**DER GESAMT-SCORE:** Die einzige Zahl, die wirklich zählt. Berechnet durch komplexe Algorithmen (Durchschnittsbildung, aber wir nennen es "Expertise").
-
-## 🛠 INSTALLATION & WARTUNG
-
-1. **Den Bau betreten:** Klone dieses Repo.
-2. **Die Vorräte prüfen:** Öffne `main.js` und trage deine Supabase-Zugangsdaten ein (sonst bleiben die Teller leer).
-3. **Einsatz:** Schiebe den ganzen Kram auf einen statischen Hoster (Netlify, Vercel, oder den Hinterhof-Server deines Vertrauens).
-
-## 🤫 GEHEIMNISSE (NICHT WEITERSAGEN)
-
-- Wer die Ratte im Footer drei Mal anklickt, löst das **PROPORTIONAL-REAKTIONS-MANÖVER** aus.
-- Der Zugang zum Admin-Panel ist nur für autorisierte Nager bestimmt.
-- Fragen? Schreib an `rattenfleisch69@gmail.com`.
+*Hinweis: Der Total Score wird **fett und prominent** dargestellt. Er ist wichtiger als deine Meinung.*
 
 ---
 
-> "Im Zweifel war es Ratte." — *Der Rat der Experten*
+## 💸 DIE INVESTITION (COST)
+
+Jedes Protokoll muss das Feld **"Kosten"** enthalten. 
+- **Währung:** Alle Angaben erfolgen ausnahmslos in **CHF** (Schweizer Franken).
+- **Definition:** Die geringste Geldmenge, die für eine vollständige Sättigung inklusive Hydrierung (Getränk) aufgebracht werden muss. 
+- **Bedingung:** Die Mahlzeit muss den Magen zur Kapitulation zwingen. Ein halber Döner zählt nicht.
+
+---
+
+## 📍 GEOLOKATION (MAPS)
+
+Jeder Eintrag verfügt über ein optionales Feld für einen **Google Maps Embed Link**. 
+- Dient der schnellen taktischen Verlegung der Experteneinheit.
+- Fehlt der Link, wird dies als `[GEOLOKATION_NICHT_VERFÜGBAR]` markiert.
+
+---
+
+## 📋 ANATOMIE EINES PROTOKOLL-EINTRAGS
+
+Jeder Datenbank-Eintrag folgt diesem strengen Schema:
+
+1.  **Lokal:** Name der Zielanlage.
+2.  **Kosten:** Günstigste Vollverpflegung in **CHF**.
+3.  **Maps URL:** Google Maps Embed Quelllink (Iframe-kompatibel).
+4.  **Essen (50%):** Kulinarische Entropie.
+5.  **Ambiente (25%):** Atmosphärische Resonanz.
+6.  **Service (25%):** Sozialer Interaktionsvektor.
+7.  **TOTAL SCORE (Ψ):** **Die gewichtete Endnote.**
+
+---
+
+## 🔍 SORTIERUNG & NAVIGATION
+
+1. **Division-Ranking:** Primäre Sortierung nach höchstem **Total Score (Ψ)**.
+2. **Effizienz-Index (ROI):** Sortierung nach `Ψ / Kosten (CHF)`.
+
+---
+
+## 🏗 TECHNISCHE ARCHITEKTUR
+
+- **Frontend:** Vanilla HTML/JS.
+- **Backend:** Supabase REST-Interface.
+- **Vibe:** "Indie-Web" — Funktionalität schlägt Ästhetik.
+
+---
+
+> "Wer nicht misst, der frisst nicht." — *Der Rat der Experten*

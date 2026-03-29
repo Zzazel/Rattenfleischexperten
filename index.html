@@ -3,8 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rattenfleischexperten [RFE]</title>
+    <title>Rattenfleischexperten - Home</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        // Inline theme toggle script to prevent FOUC (Flash of Unstyled Content)
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <script type="module" src="main.js"></script>
 </head>
 <body>

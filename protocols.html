@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Protokolle - Rattenfleischexperten</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <script type="module" src="main.js"></script>
 </head>
 <body>
@@ -25,9 +31,16 @@
 
     <main style="padding: 4rem 0;">
         <section class="container">
-            <h2 class="mono" style="margin-bottom: 2rem; font-size: 1.5rem; border-bottom: 1px solid var(--text-color); display: inline-block;">
-                FELD_PRÜF_PROTOKOLLE
-            </h2>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <h2 class="mono" style="margin: 0; font-size: 1.5rem; border-bottom: 1px solid var(--text-color); display: inline-block;">
+                    FELD_PRÜF_PROTOKOLLE
+                </h2>
+                <div class="mono" style="display: flex; gap: 0.5rem; font-size: 0.75rem;">
+                    <span class="subtle">SORTIEREN:</span>
+                    <button id="sort-score" style="padding: 0.1rem 0.4rem;">[SCORE]</button>
+                    <button id="sort-roi" style="padding: 0.1rem 0.4rem;">[EFFIZIENZ]</button>
+                </div>
+            </div>
             
             <div id="reviews-list">
                 <!-- Protokolle werden dynamisch geladen -->

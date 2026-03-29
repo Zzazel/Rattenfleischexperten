@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin-Panel (Static) - RFE</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <style>
         input, textarea { width: 100%; padding: 0.5rem; margin-bottom: 1rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); font-family: var(--font-mono); }
         .admin-item { border: 1px solid var(--border-color); padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
@@ -21,7 +27,11 @@
         <h2 class="mono" style="margin-bottom: 2rem;">PROTOKOLL MANAGEMENT (SUPABASE)</h2>
         <div class="card" style="margin-bottom: 3rem;">
             <h3 class="mono">NEUES LOKAL HINZUFÜGEN</h3>
-            <input type="text" id="new-lokal" placeholder="Name des Lokals">
+            <div style="display: grid; grid-template-columns: 1fr 100px; gap: 1rem;">
+                <input type="text" id="new-lokal" placeholder="Name des Lokals">
+                <input type="number" id="new-cost" placeholder="Kosten CHF" step="0.5">
+            </div>
+            <input type="text" id="new-maps" placeholder="Google Maps Embed URL (src)">
             <div style="display: flex; gap: 1rem;">
                 <input type="number" id="new-essen" placeholder="Essen (0-5)" min="0" max="5">
                 <input type="number" id="new-service" placeholder="Service (0-5)" min="0" max="5">
@@ -37,12 +47,24 @@
         // --- KONFIGURATION (Muss gleich sein wie in main.js) ---
         const SUPABASE_URL = 'https://lezkdohngzxvuszcwcuj.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_KPIUCuONZw1laeyPpT4e_g_cwf06Fcb';
+        const ADMIN_HASH = 'd72acedf10dcfba58c0f6018067affc36e341bb33c2dcce56cf516df4507ae20'; // SHA-256 for 'ratte'
         // ------------------------------------------------------
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
 
         let reviews = [];
 
-        document.getElementById('login-btn').addEventListener('click', () => {
-            if (document.getElementById('password').value === 'ratte') {
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const input = document.getElementById('password').value;
+            const hashedInput = await sha256(input);
+            
+            if (hashedInput === ADMIN_HASH) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-panel').style.display = 'block';
                 loadAdminReviews();
@@ -67,7 +89,11 @@
                 item.className = 'admin-item';
                 item.innerHTML = `
                     <p class="mono subtle">ID: ${r.id}</p>
-                    <input type="text" value="${r.lokal}" id="edit-lokal-${r.id}">
+                    <div style="display: grid; grid-template-columns: 1fr 100px; gap: 1rem;">
+                        <input type="text" value="${r.lokal}" id="edit-lokal-${r.id}">
+                        <input type="number" value="${r.cost || 0}" id="edit-cost-${r.id}" step="0.5">
+                    </div>
+                    <input type="text" value="${r.maps_url || ''}" id="edit-maps-${r.id}" placeholder="Google Maps Embed URL">
                     <div style="display: flex; gap: 1rem;">
                         <input type="number" value="${r.essen}" id="edit-essen-${r.id}">
                         <input type="number" value="${r.service}" id="edit-service-${r.id}">
@@ -86,6 +112,8 @@
         async function updateReview(id) {
             const updatedData = {
                 lokal: document.getElementById(`edit-lokal-${id}`).value,
+                cost: parseFloat(document.getElementById(`edit-cost-${id}`).value),
+                maps_url: document.getElementById(`edit-maps-${id}`).value,
                 essen: parseInt(document.getElementById(`edit-essen-${id}`).value),
                 service: parseInt(document.getElementById(`edit-service-${id}`).value),
                 ambiente: parseInt(document.getElementById(`edit-ambiente-${id}`).value),
@@ -113,6 +141,8 @@
         document.getElementById('add-btn').addEventListener('click', async () => {
             const newEntry = {
                 lokal: document.getElementById('new-lokal').value,
+                cost: parseFloat(document.getElementById('new-cost').value) || 0,
+                maps_url: document.getElementById('new-maps').value,
                 essen: parseInt(document.getElementById('new-essen').value) || 0,
                 service: parseInt(document.getElementById('new-service').value) || 0,
                 ambiente: parseInt(document.getElementById('new-ambiente').value) || 0,

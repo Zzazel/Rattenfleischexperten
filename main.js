@@ -6,16 +6,15 @@ const SUPABASE_KEY = 'sb_publishable_KPIUCuONZw1laeyPpT4e_g_cwf06Fcb';
 // ---------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Theme-Handhabung
-  const theme = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-
+  // Theme Toggle Button Logic (Initial state is set in <head> to prevent FOUC)
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
-    themeToggle.textContent = theme === 'light' ? 'NACHT' : 'TAG';
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    themeToggle.textContent = currentTheme === 'light' ? 'NACHT' : 'TAG';
+    
     themeToggle.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      const theme = document.documentElement.getAttribute('data-theme');
+      const newTheme = theme === 'light' ? 'dark' : 'light';
       
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
@@ -27,6 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const reviewsContainer = document.getElementById('reviews-list');
   if (reviewsContainer) {
     loadReviewsFromSupabase();
+    
+    // Sorting Event Listeners
+    document.getElementById('sort-score')?.addEventListener('click', () => {
+      currentReviews.sort((a, b) => calculateTotalScore(b) - calculateTotalScore(a));
+      renderReviews(currentReviews);
+    });
+    
+    document.getElementById('sort-roi')?.addEventListener('click', () => {
+      currentReviews.sort((a, b) => {
+        const roiA = calculateTotalScore(a) / (a.cost || 1);
+        const roiB = calculateTotalScore(b) / (b.cost || 1);
+        return roiB - roiA;
+      });
+      renderReviews(currentReviews);
+    });
   }
 
   // Secret Admin Access (Click rat in footer 3 times)
@@ -98,6 +112,13 @@ function startRatEscape(originalRat) {
   }, 1400);
 }
 
+let currentReviews = [];
+
+function calculateTotalScore(review) {
+  // Formula: 0.5 * food + 0.25 * ambience + 0.25 * service
+  return (0.5 * review.essen + 0.25 * review.ambiente + 0.25 * review.service).toFixed(1);
+}
+
 async function loadReviewsFromSupabase() {
   const container = document.getElementById('reviews-list');
   console.log("Versuche Protokolle von Supabase zu laden...");
@@ -121,47 +142,67 @@ async function loadReviewsFromSupabase() {
       throw new Error(`HTTP Fehler! Status: ${response.status}`);
     }
 
-    const reviews = await response.json();
-    console.log(`${reviews.length} Protokolle geladen:`, reviews);
-    
-    if (reviews.length === 0) {
-      container.innerHTML = '<p class="mono">Noch keine Protokolle vorhanden. Geh essen!</p>';
-      return;
-    }
-
-    container.innerHTML = ''; // Leeren
-    reviews.forEach(review => {
-      const gesamt = ((review.essen + review.service + review.ambiente) / 3).toFixed(1);
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
-          <div>
-            <h3 style="font-size: 1.25rem;">${review.lokal}</h3>
-            <p class="subtle mono">Lokal Audit • ID: ${review.id}</p>
-          </div>
-          <div class="mono" style="text-align: right;">
-            <div class="subtle" style="font-size: 0.6rem; margin-bottom: 0.2rem;">AUDIT-SCORE</div>
-            <div style="font-size: 2rem; font-weight: 900; color: var(--primary-color); line-height: 1;">
-              ${gesamt} <span style="font-size: 1.2rem;">🐀</span>
-            </div>
-          </div>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0;">
-          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">ESSEN</div><div class="mono" style="font-weight: bold;">${review.essen}/5 🐀</div></div>
-          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">SERVICE</div><div class="mono" style="font-weight: bold;">${review.service}/5 🐀</div></div>
-          <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">AMBIENTE</div><div class="mono" style="font-weight: bold;">${review.ambiente}/5 🐀</div></div>
-        </div>
-        <div style="padding: 0.75rem; background: var(--secondary-color); border-radius: 4px; font-size: 0.9rem; border-left: 2px solid var(--primary-color);">
-          <span class="mono subtle" style="font-size: 0.7rem; display: block; margin-bottom: 0.25rem;">EXPERTEN-NOTITZ:</span>
-          ${review.notitz}
-        </div>
-      `;
-      container.appendChild(card);
-    });
+    currentReviews = await response.json();
+    renderReviews(currentReviews);
   } catch (error) {
     console.error("Ladefehler:", error);
     container.innerHTML = `<p class="mono">Fehler beim Laden: ${error.message}<br>Prüfe die Browser-Konsole (F12) für Details.</p>`;
   }
+}
+
+function renderReviews(reviews) {
+  const container = document.getElementById('reviews-list');
+  if (!container) return;
+
+  if (reviews.length === 0) {
+    container.innerHTML = '<p class="mono">Noch keine Protokolle vorhanden. Geh essen!</p>';
+    return;
+  }
+
+  container.innerHTML = ''; // Leeren
+  reviews.forEach(review => {
+    const gesamt = calculateTotalScore(review);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+        <div>
+          <h3 style="font-size: 1.25rem;">${review.lokal}</h3>
+          <p class="subtle mono">Lokal Audit • ID: ${review.id} • <span style="color: var(--text-color); font-weight: bold;">INVEST: ${review.cost || '??'} CHF</span></p>
+        </div>
+        <div class="mono" style="text-align: right;">
+          <div class="subtle" style="font-size: 0.6rem; margin-bottom: 0.2rem;">AUDIT-SCORE</div>
+          <div style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color); line-height: 1;">
+            ${gesamt} <span style="font-size: 1.2rem;">🐀</span>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0;">
+        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">ESSEN (50%)</div><div class="mono" style="font-weight: bold;">${review.essen}/5 🐀</div></div>
+        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">SERVICE (25%)</div><div class="mono" style="font-weight: bold;">${review.service}/5 🐀</div></div>
+        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">AMBIENTE (25%)</div><div class="mono" style="font-weight: bold;">${review.ambiente}/5 🐀</div></div>
+      </div>
+
+      ${review.maps_url ? `
+        <div style="margin-bottom: 1rem; border-radius: 4px; overflow: hidden; height: 150px; border: 1px solid var(--border-color);">
+          <iframe 
+            src="${review.maps_url}" 
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      ` : `
+        <div class="mono subtle" style="margin-bottom: 1rem; height: 40px; border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+          [GEOLOKATION_NICHT_VERFÜGBAR]
+        </div>
+      `}
+
+      <div style="padding: 0.75rem; background: var(--secondary-color); border-radius: 4px; font-size: 0.9rem; border-left: 4px solid var(--primary-color);">
+        <span class="mono subtle" style="font-size: 0.7rem; display: block; margin-bottom: 0.25rem;">EXPERTEN-NOTITZ:</span>
+        ${review.notitz}
+      </div>
+    `;
+    container.appendChild(card);
+  });
 }
 
