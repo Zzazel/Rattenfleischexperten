@@ -165,40 +165,40 @@ function renderReviews(reviews) {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem;">
         <div>
-          <h3 style="font-size: 1.25rem;">${review.lokal}</h3>
-          <p class="subtle mono">Lokal Audit • ID: ${review.id} • <span style="color: var(--text-color); font-weight: bold;">INVEST: ${review.cost || '??'} CHF</span></p>
+          <h3 style="font-size: 1.5rem; margin-bottom: 0.25rem;">${review.lokal}</h3>
+          <div class="invest-tag">INVEST: ${review.cost || '??'} CHF</div>
+          <p class="subtle mono" style="margin-top: 0.5rem; font-size: 0.7rem;">ID: ${review.id}</p>
         </div>
-        <div class="mono" style="text-align: right;">
-          <div class="subtle" style="font-size: 0.6rem; margin-bottom: 0.2rem;">AUDIT-SCORE</div>
-          <div style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color); line-height: 1;">
-            ${gesamt} <span style="font-size: 1.2rem;">🐀</span>
-          </div>
+        <div class="audit-score-bubble">
+          <div class="mono" style="font-size: 0.6rem;">SCORE</div>
+          <div style="font-size: 1.8rem; font-weight: 900; line-height: 1;">${gesamt}</div>
+          <div style="font-size: 0.8rem;">🐀</div>
         </div>
       </div>
       
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0;">
-        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">ESSEN (50%)</div><div class="mono" style="font-weight: bold;">${review.essen}/5 🐀</div></div>
-        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">SERVICE (25%)</div><div class="mono" style="font-weight: bold;">${review.service}/5 🐀</div></div>
-        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">AMBIENTE (25%)</div><div class="mono" style="font-weight: bold;">${review.ambiente}/5 🐀</div></div>
+      <div class="protocol-grid" style="margin-bottom: 1.5rem; border-top: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color); padding: 1rem 0;">
+        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">ESSEN (50%)</div><div class="mono" style="font-weight: bold; font-size: 1.1rem;">${review.essen}/5</div></div>
+        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">SERVICE (25%)</div><div class="mono" style="font-weight: bold; font-size: 1.1rem;">${review.service}/5</div></div>
+        <div style="text-align: center;"><div class="subtle mono" style="font-size: 0.65rem;">AMBIENTE (25%)</div><div class="mono" style="font-weight: bold; font-size: 1.1rem;">${review.ambiente}/5</div></div>
       </div>
 
       ${review.maps_url ? `
-        <div style="margin-bottom: 1rem; border-radius: 4px; overflow: hidden; height: 150px; border: 1px solid var(--border-color);">
+        <div style="margin-bottom: 1.5rem; border-radius: var(--nibble-radius); overflow: hidden; height: 160px; border: 3px solid var(--border-color); filter: grayscale(0.5) contrast(1.2);">
           <iframe 
             src="${review.maps_url}" 
             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
       ` : `
-        <div class="mono subtle" style="margin-bottom: 1rem; height: 40px; border: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+        <div class="mono subtle" style="margin-bottom: 1.5rem; height: 40px; border: 2px dashed var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
           [GEOLOKATION_NICHT_VERFÜGBAR]
         </div>
       `}
 
-      <div style="padding: 0.75rem; background: var(--secondary-color); border-radius: 4px; font-size: 0.9rem; border-left: 4px solid var(--primary-color);">
-        <span class="mono subtle" style="font-size: 0.7rem; display: block; margin-bottom: 0.25rem;">EXPERTEN-NOTITZ:</span>
+      <div style="padding: 1rem; background: var(--secondary-color); border-radius: var(--nibble-radius); font-size: 1rem; border: 2px solid var(--border-color); position: relative;">
+        <span class="mono" style="font-size: 0.7rem; position: absolute; top: -10px; left: 10px; background: var(--text-color); color: var(--bg-color); padding: 0 5px;">EXPERTEN-NOTITZ</span>
         ${review.notitz}
       </div>
     `;
