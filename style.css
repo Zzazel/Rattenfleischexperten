@@ -76,6 +76,43 @@ h1, h2, h3, h4 {
   width: 100%;
 }
 
+/* Header & Ratometer */
+header {
+  border-bottom: 2px solid var(--border-color);
+  padding: 1rem 0;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+}
+
+.ratometer-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratometer-container {
+  width: 80px;
+  height: 4px;
+  background: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.ratometer-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--primary-color);
+  animation: fillRatometer 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+}
+
+@keyframes fillRatometer {
+  0% { width: 0%; }
+  100% { width: 87%; }
+}
+
 /* Interactive Elements */
 a {
   color: inherit;
@@ -124,16 +161,6 @@ button:active {
 }
 
 /* Navigation */
-header {
-  border-bottom: 2px solid var(--border-color);
-  padding: 1.5rem 0;
-  backdrop-filter: blur(12px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--header-bg);
-}
-
 nav {
   display: flex;
   gap: 2rem;
@@ -152,27 +179,59 @@ nav a:hover, nav a[style*="bold"] {
   background: transparent;
 }
 
-/* Protocol Grid */
+/* Member List / Council */
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.member-card {
+  background: var(--bg-color);
+  border: 2px solid var(--border-color);
+  padding: 2.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.member-card:hover {
+  transform: translateY(-8px);  
+  box-shadow: 15px 15px 0 var(--secondary-color);
+  border-color: var(--primary-color);
+}
+
+.member-card img {
+  filter: grayscale(1);
+  transition: filter 0.4s ease;
+  width: 250px;
+  height: 300px;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+
+.member-card:hover img {
+  filter: grayscale(0);
+}
+
+.member-rank {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+/* Protocol / Review List */
 .protocol-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-  .container { padding: 0 1rem; }
-  .protocol-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .card { padding: 1.5rem; }
-  
-  header .container {
-    flex-direction: column;
-    gap: 1.25rem;
-    text-align: center;
-  }
-}
-
-/* Sophisticated Rat UI */
 .audit-score-bubble {
   border: 2.5px solid var(--border-color);
   padding: 1rem;
@@ -188,13 +247,36 @@ nav a:hover, nav a[style*="bold"] {
   font-weight: 700;
 }
 
+.review-note {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--accent-color);
+  border-top: 1px dashed var(--border-color);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
 .rat-mark {
   font-size: 2rem;
-  opacity: 0.5; /* Increased visibility */
+  opacity: 0.5;
   position: absolute;
   bottom: 1.5rem;
   right: 1.5rem;
   pointer-events: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container { padding: 0 1rem; }
+  .protocol-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .card { padding: 1.5rem; }
+  
+  header .container {
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+  }
 }
 
 /* Animations */

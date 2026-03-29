@@ -14,17 +14,25 @@
     <script type="module" src="main.js" defer></script>
 </head>
 <body>
-    <header class="glass" style="position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; background: var(--header-bg); backdrop-filter: var(--glass-effect);">
+    <header class="glass">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-            <a href="index.html" style="font-size: 1.1rem; font-weight: bold; border: none; display: flex; align-items: center; gap: 0.5rem;">
-                <span class="mono" style="color: var(--primary-color)">[RFE]</span>
-                <span>Rattenfleischexperten</span>
-            </a>
-            <nav style="display: flex; gap: 1.25rem; align-items: center;" class="mono">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="index.html" style="font-size: 1.1rem; font-weight: 900; border: none; display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="mono" style="color: var(--primary-color)">[RFE]</span>
+                    <span>Rattenfleischexperten</span>
+                </a>
+                <div class="ratometer-wrapper">
+                    <span class="mono" style="font-size: 0.6rem; opacity: 0.6;">RAT_LVL</span>
+                    <div class="ratometer-container">
+                        <div class="ratometer-fill"></div>
+                    </div>
+                </div>
+            </div>
+            <nav class="mono">
                 <a href="protocols.html" style="color: var(--primary-color); font-weight: bold;">Protokolle</a>
                 <a href="council.html">Der Rat</a>
                 <a href="manifesto.html">Manifest</a>
-                <button id="theme-toggle" style="padding: 0.2rem 0.4rem; font-size: 0.8rem;">TAG</button>
+                <button id="theme-toggle" style="padding: 0.2rem 0.4rem; font-size: 0.8rem; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);">TAG</button>
             </nav>
         </div>
     </header>

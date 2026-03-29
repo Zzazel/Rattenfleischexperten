@@ -187,15 +187,16 @@ function renderReviews(reviews) {
           <div class="invest-tag">INVESTITION: ${review.cost || '??'} CHF</div>
         </div>
         <div class="audit-score-bubble">
-          <div class="mono" style="font-size: 0.65rem; margin-bottom: 0.25rem;">Ψ_SCORE</div>
-          <div style="font-size: 2rem; font-weight: 800; line-height: 1;">${gesamt}</div>
+          <div class="mono" style="font-size: 0.6rem; margin-bottom: 0.25rem;">Ψ_INDEX</div>
+          <div style="font-size: 2.2rem; font-weight: 900; line-height: 1;">${gesamt}</div>
+          <div class="mono" style="font-size: 0.5rem; margin-top: 0.25rem;">RATTEN</div>
         </div>
       </div>
       
       <div class="protocol-grid" style="margin-bottom: 2rem; border-top: 1.5px solid var(--border-color); border-bottom: 1.5px solid var(--border-color); padding: 1.5rem 0;">
-        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">ESSEN (50%)</div><div style="font-weight: 700; font-size: 1.25rem;">${review.essen}/5</div></div>
-        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">SERVICE (25%)</div><div style="font-weight: 700; font-size: 1.25rem;">${review.service}/5</div></div>
-        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">AMBIENTE (25%)</div><div style="font-weight: 700; font-size: 1.25rem;">${review.ambiente}/5</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">MATERIE (50%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.essen}/5 Ratten</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">INTERAKTION (25%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.service}/5 Ratten</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">RESONANZ (25%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.ambiente}/5 Ratten</div></div>
       </div>
 
       ${review.maps_url ? `
@@ -211,8 +212,8 @@ function renderReviews(reviews) {
         </div>
       `}
 
-      <div style="font-size: 1.1rem; line-height: 1.6; font-style: italic; color: var(--accent-color); padding-right: 3rem;">
-        "${review.notitz}"
+      <div class="review-note">
+        ${review.notitz}
       </div>
       
       <div class="rat-mark">🐀</div>
