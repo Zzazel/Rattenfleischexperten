@@ -76,7 +76,7 @@ h1, h2, h3, h4 {
   width: 100%;
 }
 
-/* Header & Ratometer */
+/* Header & Navigation */
 header {
   border-bottom: 2px solid var(--border-color);
   padding: 1rem 0;
@@ -87,55 +87,59 @@ header {
   background: var(--header-bg);
 }
 
-.ratometer-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.ratometer-container {
-  width: 100px;
-  height: 9px;
+/* New Large Ratometer Below Header */
+.ratometer-global-container {
+  width: 90%;
   background: var(--secondary-color);
   border: 2px solid var(--border-color);
+  height: 24px;
+  position: sticky;
+  top: 64px; /* Adjust based on header height */
+  z-index: 99;
+  display: flex;
+  align-items: center;
   overflow: visible;
+  margin: 0 auto; /* Ensure centering if width is reduced */
 }
 
 .ratometer-fill {
   width: 0%;
   height: 100%;
   background: var(--primary-color);
+  position: relative;
+  transition: width 0.5s ease-in-out;
 }
 
-/* default */
+/* Stage 1: Global (0-67%) - Slow and steady */
 .ratometer-fill[data-state="default"] {
-  animation: fillDefault 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+  animation: fillGlobal 90s cubic-bezier(0.84,0.21,0.37,0.99) forwards;
 }
 
-/* admin */
+/* Stage 2: Admin Page (67-100%) - Tense approach */
 .ratometer-fill[data-state="admin"] {
-  animation: fillAdmin 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+  animation: fillAdmin 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
 }
 
-/* logged in */
+/* Stage 3: Logged In (100-130%) - Out of bounds burst */
 .ratometer-fill[data-state="logged-in"] {
-  animation: fillLogged 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+  animation: fillOverdrive 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+  box-shadow: 0 0 15px var(--primary-color);
+  z-index: 101;
 }
 
-/* animations */
-@keyframes fillDefault {
+@keyframes fillGlobal {
   0% { width: 0%; }
-  100% { width: 87%; }
+  100% { width: 67%; }
 }
 
 @keyframes fillAdmin {
-  0% { width: 0%; }
+  0% { width: 60%; }
   100% { width: 100%; }
 }
 
-@keyframes fillLogged {
-  0% { width: 0%; }
-  100% { width: 120%; }
+@keyframes fillOverdrive {
+  0% { width: 100%; }
+  100% { width: 130%; }
 }
 
 /* Interactive Elements */

@@ -21,12 +21,6 @@
                     <span class="mono" style="color: var(--primary-color)">[RFE]</span>
                     <span>Rattenfleischexperten</span>
                 </a>
-                <div class="ratometer-wrapper">
-                    <span class="mono" style="font-size: 0.6rem; opacity: 0.6;">RAT_LVL</span>
-                    <div class="ratometer-container">
-                        <div class="ratometer-fill"></div>
-                    </div>
-                </div>
             </div>
             <nav class="mono">
                 <a href="protocols.html">Protokolle</a>
@@ -36,6 +30,11 @@
             </nav>
         </div>
     </header>
+
+    <div class="ratometer-global-container">
+        <div class="ratometer-fill" data-state="default"></div>
+        <span class="mono" style="position: absolute; right: 1rem; font-size: 0.6rem; opacity: 0.4; pointer-events: none;">RAT_INTENSITY_INDEX</span>
+    </div>
 
     <main style="padding: 4rem 0;">
         <section class="container" style="max-width: 650px;">
