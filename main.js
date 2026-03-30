@@ -64,6 +64,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+let adminLoggedIn = false;
+
+function updateRatometer() {
+    const fill = document.querySelector('.ratometer-fill');
+    if (!fill) return;
+
+    const isAdminPage = window.location.pathname.includes('admin.html');
+
+    if (!isAdminPage) {
+        fill.dataset.state = 'default';
+    } else if (!adminLoggedIn) {
+        fill.dataset.state = 'admin';
+    } else {
+        fill.dataset.state = 'logged-in';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', updateRatometer);
+
 function startRatEscape(originalRat) {
   const holeX = 20;
   const holeY = 20;

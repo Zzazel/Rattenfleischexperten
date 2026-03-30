@@ -94,23 +94,48 @@ header {
 }
 
 .ratometer-container {
-  width: 80px;
-  height: 4px;
+  width: 100px;
+  height: 9px;
   background: var(--secondary-color);
-  border: 1px solid var(--border-color);
-  overflow: hidden;
+  border: 2px solid var(--border-color);
+  overflow: visible;
 }
 
 .ratometer-fill {
   width: 0%;
   height: 100%;
   background: var(--primary-color);
-  animation: fillRatometer 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
 }
 
-@keyframes fillRatometer {
+/* default */
+.ratometer-fill[data-state="default"] {
+  animation: fillDefault 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+}
+
+/* admin */
+.ratometer-fill[data-state="admin"] {
+  animation: fillAdmin 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+}
+
+/* logged in */
+.ratometer-fill[data-state="logged-in"] {
+  animation: fillLogged 2.5s cubic-bezier(0.1, 0.5, 0.2, 1) forwards;
+}
+
+/* animations */
+@keyframes fillDefault {
   0% { width: 0%; }
   100% { width: 87%; }
+}
+
+@keyframes fillAdmin {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes fillLogged {
+  0% { width: 0%; }
+  100% { width: 120%; }
 }
 
 /* Interactive Elements */

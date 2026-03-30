@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin-Panel (Static) - RFE</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        // Inline theme toggle script to prevent FOUC (Flash of Unstyled Content)
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <script type="module" src="main.js" defer></script>
     <style>
         input, textarea { width: 100%; padding: 0.5rem; margin-bottom: 1rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); font-family: var(--font-mono); }
@@ -83,6 +90,9 @@
             const hashedInput = await sha256(input);
             
             if (hashedInput === ADMIN_HASH) {
+                adminLoggedIn = true;
+                updateRatometer();
+
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-panel').style.display = 'block';
                 loadAdminReviews();
@@ -184,7 +194,7 @@
                 <a href="https://www.tiktok.com/@rattenfleischexperten?_r=1&_t=ZN-957BZkPvYYA" target="_blank">TIKTOK</a>
                 <a href="https://www.instagram.com/rattenfleischexperten?igsh=bmtjZGljNmI3Z3c2" target="_blank">INSTAGRAM</a>
                 <a href="mailto:rattenfleisch69@gmail.com">EMAIL</a>
-                <span class="subtle">V1.0.9-NAGER</span>
+                <span class="subtle">V1.0.0-NAGER</span>
             </div>
             <div style="margin-top: 3rem; opacity: 0.2; font-size: 1.5rem; cursor: pointer;">
                 🐀
