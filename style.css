@@ -89,9 +89,9 @@ header {
 
 /* New Large Ratometer Below Header */
 .ratometer-global-container {
-  width: 90%;
+  width: 80%;
   background: var(--secondary-color);
-  border: 2px solid var(--border-color);
+  border: 3px solid var(--border-color);
   height: 24px;
   position: sticky;
   top: 64px; /* Adjust based on header height */
@@ -100,6 +100,7 @@ header {
   align-items: center;
   overflow: visible;
   margin: 0 auto; /* Ensure centering if width is reduced */
+  box-shadow: 0px 3px 10px 2px gray;
 }
 
 .ratometer-fill {
@@ -112,17 +113,17 @@ header {
 
 /* Stage 1: Global (0-67%) - Slow and steady */
 .ratometer-fill[data-state="default"] {
-  animation: fillGlobal 90s cubic-bezier(0.84,0.21,0.37,0.99) forwards;
+  animation: fillGlobal 90s cubic-bezier(0.35, 0.3, 0, 0.95) forwards;
 }
 
 /* Stage 2: Admin Page (67-100%) - Tense approach */
 .ratometer-fill[data-state="admin"] {
-  animation: fillAdmin 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+  animation: fillAdmin 10s cubic-bezier(1, 0.02, 0.67, 0.7) forwards;
 }
 
 /* Stage 3: Logged In (100-130%) - Out of bounds burst */
 .ratometer-fill[data-state="logged-in"] {
-  animation: fillOverdrive 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+  animation: fillOverdrive 4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
   box-shadow: 0 0 15px var(--primary-color);
   z-index: 101;
 }
@@ -133,7 +134,7 @@ header {
 }
 
 @keyframes fillAdmin {
-  0% { width: 60%; }
+  0% { width: 66%; }
   100% { width: 100%; }
 }
 
