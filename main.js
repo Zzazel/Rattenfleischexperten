@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-let adminLoggedIn = false;
+window.adminLoggedIn = false;
 
-function updateRatometer() {
+window.updateRatometer = function() {
     const fill = document.querySelector('.ratometer-fill');
     if (!fill) return;
 
@@ -74,14 +74,14 @@ function updateRatometer() {
 
     if (!isAdminPage) {
         fill.dataset.state = 'default';
-    } else if (!adminLoggedIn) {
+    } else if (!window.adminLoggedIn) {
         fill.dataset.state = 'admin';
     } else {
         fill.dataset.state = 'logged-in';
     }
-}
+};
 
-document.addEventListener('DOMContentLoaded', updateRatometer);
+document.addEventListener('DOMContentLoaded', () => window.updateRatometer());
 
 function startRatEscape(originalRat) {
   const holeX = 20;
@@ -206,16 +206,16 @@ function renderReviews(reviews) {
           <div class="invest-tag">INVESTITION: ${review.cost || '??'} CHF</div>
         </div>
         <div class="audit-score-bubble">
-          <div class="mono" style="font-size: 0.6rem; margin-bottom: 0.25rem;">Ψ_INDEX</div>
+          <div class="mono" style="font-size: 0.5rem; margin-bottom: 0.25rem;">Ψ_INDEX</div>
           <div style="font-size: 2.2rem; font-weight: 900; line-height: 1;">${gesamt}</div>
-          <div class="mono" style="font-size: 0.5rem; margin-top: 0.25rem;">RATTEN</div>
+          <div class="mono" style="font-size: 1rem; margin-top: 0.25rem;">🐀</div>
         </div>
       </div>
       
       <div class="protocol-grid" style="margin-bottom: 2rem; border-top: 1.5px solid var(--border-color); border-bottom: 1.5px solid var(--border-color); padding: 1.5rem 0;">
-        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">MATERIE (50%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.essen}/5 Ratten</div></div>
-        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">INTERAKTION (25%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.service}/5 Ratten</div></div>
-        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">RESONANZ (25%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.ambiente}/5 Ratten</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">MATERIE (50%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.essen}/5 🐀</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">INTERAKTION (25%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.service}/5 🐀</div></div>
+        <div style="text-align: center;"><div class="mono subtle" style="font-size: 0.6rem; margin-bottom: 0.5rem;">RESONANZ (25%)</div><div style="font-weight: 700; font-size: 1.1rem;">${review.ambiente}/5 🐀</div></div>
       </div>
 
       ${review.maps_url ? `

@@ -62,7 +62,7 @@
                 <input type="number" id="new-service" placeholder="Service (0-5)" min="0" max="5">
                 <input type="number" id="new-ambiente" placeholder="Ambiente (0-5)" min="0" max="5">
             </div>
-            <textarea id="new-notitz" placeholder="Notitz"></textarea>
+            <textarea id="new-notitz" placeholder="Notitz" rows="15"></textarea>
             <button id="add-btn" class="mono">HINZUFÜGEN</button>
         </div>
         <div id="edit-list"></div>
@@ -88,11 +88,10 @@
         document.getElementById('login-btn').addEventListener('click', async () => {
             const input = document.getElementById('password').value;
             const hashedInput = await sha256(input);
-            
-            if (hashedInput === ADMIN_HASH) {
-                adminLoggedIn = true;
-                updateRatometer();
 
+            if (hashedInput === ADMIN_HASH) {
+                window.adminLoggedIn = true;
+                window.updateRatometer();
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-panel').style.display = 'block';
                 loadAdminReviews();
@@ -127,7 +126,7 @@
                         <input type="number" value="${r.service}" id="edit-service-${r.id}">
                         <input type="number" value="${r.ambiente}" id="edit-ambiente-${r.id}">
                     </div>
-                    <textarea id="edit-notitz-${r.id}">${r.notitz}</textarea>
+                    <textarea id="edit-notitz-${r.id}" rows="10">${r.notitz}</textarea>
                     <div style="display: flex; justify-content: space-between;">
                         <button onclick="updateReview(${r.id})" class="mono" style="background: var(--primary-color); color: white;">UPDATE</button>
                         <button onclick="deleteReview(${r.id})" class="mono" style="background: #e74c3c; color: white;">LÖSCHEN</button>
