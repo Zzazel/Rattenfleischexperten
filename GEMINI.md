@@ -7,10 +7,11 @@
 - **The Manifesto:** Fixed "Testverfahren" involving the "Döner-Axiom" and the formula: `Ψ = (0.5 * E) + (0.25 * A) + (0.25 * S)`.
 
 ## Technical Architecture (v1.0.0 "Initial Release")
-- **Structure:** Multi-page static website (`index.html`, `protocols.html`, `council.html`, `manifesto.html`, `admin.html`).
-- **Backend:** Supabase (REST API) for dynamic review data. No build process required.
+- **Structure:** Multi-page static website (`index.html`, `protocols.html`, `council.html`, `manifesto.html`, `timeline.html`, `admin.html`).
+- **Backend:** Supabase (REST API) for dynamic review data.
+- **Authentication:** Google OAuth via Supabase for Admin access.
 - **Styling:** Vanilla CSS (`style.css`).
-- **Logic:** `main.js` (Theme toggle, Supabase fetching, global state, secret animations).
+- **Logic:** `main.js` (Theme toggle, Supabase fetching, global state, secret animations, Timeline processing).
 - **Socials:** TikTok and Instagram links integrated into all footers.
 
 ## Core Features & v1.0.0 Mechanics
@@ -19,8 +20,8 @@
   2. **Stage 2 (Admin Login):** 67-100% tense fill (10s) on `admin.html` before login.
   3. **Stage 3 (Logged In):** 100-130% "overdrive" burst with a glow effect after login.
 - **Secret Admin Access:** 3-clicks on the footer rat triggers the "Rat Escape" animation to the top-left, followed by a blackout transition to `admin.html`.
-- **Scoping Bridge:** `adminLoggedIn` and `updateRatometer` are explicitly attached to the `window` object in `main.js` to ensure reliable communication between scripts and the `admin.html` login logic.
-- **Admin Management:** Functional panel for CRUD operations on reviews via Supabase. Textareas are expanded to `rows="10"` for better editing.
+- **Timeline System:** Uses the `visit_date` database column to track past and upcoming audits, categorizing them into [AUSGEFÜHRT], [NÄCHSTE_PRÜFUNG], and [GEPLANT].
+- **Admin Management:** Functional panel for CRUD operations with Google Login. Includes `visit_date` and `maps_url` support. Textareas are expanded to `rows="10"` for better editing.
 
 ## Mandatory Standards
 - **Swiss Spelling:** Mandatory use of **Swiss Spelling** across all pages (no "ß", use "ss" instead).

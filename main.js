@@ -78,6 +78,7 @@ window.loadTimelineData = async function() {
     try {
         const { data, error } = await window.supabaseClient
             .from('reviews')
+            .select('*')
             .not('visit_date', 'is', null)
             .order('visit_date', { ascending: true });
 
