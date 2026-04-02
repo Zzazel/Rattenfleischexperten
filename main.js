@@ -1,12 +1,15 @@
-// Rattenfleischexperten - Gemeinsame Logik (Static Supabase Edition)
+// Rattenfleischexperten - Gemeinsame Logik (Supabase Google OAuth Edition)
 
-// --- KONFIGURATION (Hier deine Daten eintragen!) ---
+// --- KONFIGURATION ---
 const SUPABASE_URL = 'https://lezkdohngzxvuszcwcuj.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_KPIUCuONZw1laeyPpT4e_g_cwf06Fcb';
-// ---------------------------------------------------
+// ---------------------
+
+// Initialize Supabase Client
+window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Theme Toggle Button Logic (Initial state is set in <head> to prevent FOUC)
+  // Theme Toggle Button Logic
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -22,14 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Protokolle dynamisch laden (Sowohl auf der Protokoll-Seite als auch auf Home für das Datum)
+  // Protokolle dynamisch laden
   const reviewsContainer = document.getElementById('reviews-list');
   const lastAuditDisplay = document.getElementById('last-audit-date');
   
   if (reviewsContainer || lastAuditDisplay) {
     loadReviewsFromSupabase();
     
-    // Sorting Event Listeners (nur wenn Container da ist)
     if (reviewsContainer) {
       document.getElementById('sort-score')?.addEventListener('click', () => {
         currentReviews.sort((a, b) => calculateTotalScore(b) - calculateTotalScore(a));
@@ -62,32 +64,73 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Initial Ratometer State
+  window.updateRatometer();
+  
+  // Listen for Auth Changes to update Ratometer in real-time
+  window.supabaseClient.auth.onAuthStateChange(() => {
+    window.updateRatometer();
+  });
 });
 
-window.adminLoggedIn = false;
+window.loadTimelineData = async function() {
+    try {
+        const { data, error } = await window.supabaseClient
+            .from('reviews')
+            .not('visit_date', 'is', null)
+            .order('visit_date', { ascending: true });
 
-window.updateRatometer = function() {
+        if (error) throw error;
+        if (!data || data.length === 0) return { lastPast: [], nextOne: [], following: [] };
+
+        const now = new Date();
+        // Just compare date strings for simplicity and reliability
+        const todayStr = now.toISOString().split('T')[0];
+
+        const past = data.filter(r => r.visit_date < todayStr);
+        const upcoming = data.filter(r => r.visit_date >= todayStr);
+
+        // Group 1: Most recent past (last item in past list)
+        const lastPast = past.length > 0 ? [past[past.length - 1]] : [];
+        
+        // Group 2: Next upcoming (first item in upcoming list)
+        const nextOne = upcoming.length > 0 ? [upcoming[0]] : [];
+        
+        // Group 3: Following 4 upcoming
+        const following = upcoming.length > 1 ? upcoming.slice(1, 5) : [];
+
+        return {
+            lastPast: lastPast.map(r => ({ ...r, status: 'past' })),
+            nextOne: nextOne.map(r => ({ ...r, status: 'next' })),
+            following: following.map(r => ({ ...r, status: 'upcoming' }))
+        };
+    } catch (err) {
+        console.error("Timeline error:", err);
+        return { lastPast: [], nextOne: [], following: [] };
+    }
+};
+
+window.updateRatometer = async function() {
     const fill = document.querySelector('.ratometer-fill');
     if (!fill) return;
 
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
     const isAdminPage = window.location.pathname.includes('admin.html');
 
     if (!isAdminPage) {
         fill.dataset.state = 'default';
-    } else if (!window.adminLoggedIn) {
+    } else if (!session) {
         fill.dataset.state = 'admin';
     } else {
         fill.dataset.state = 'logged-in';
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => window.updateRatometer());
-
 function startRatEscape(originalRat) {
   const holeX = 20;
   const holeY = 20;
 
-  // 1. Create Hole at Top-Left
   const hole = document.createElement('div');
   hole.className = 'mouse-hole';
   hole.style.left = holeX + 'px';
@@ -95,27 +138,21 @@ function startRatEscape(originalRat) {
   hole.style.display = 'block';
   document.body.appendChild(hole);
 
-  // 2. Create Running Rat Actor
   const rect = originalRat.getBoundingClientRect();
   const rat = document.createElement('div');
   rat.className = 'rat-actor';
   rat.textContent = '🐀';
-  
-  // Position exakt dort wo das Original ist (viewport coordinates)
   rat.style.left = rect.left + 'px';
   rat.style.top = rect.top + 'px'; 
   document.body.appendChild(rat);
 
-  // 3. Create Blackout Overlay
   const overlay = document.createElement('div');
   overlay.id = 'tunnel-overlay';
   overlay.style.clipPath = `circle(0% at ${holeX + 30}px ${holeY + 15}px)`;
   document.body.appendChild(overlay);
 
-  // Hide original
   originalRat.style.visibility = 'hidden';
 
-  // 4. Animate Rat to Hole
   setTimeout(() => {
     rat.style.left = (holeX + 10) + 'px';
     rat.style.top = (holeY + 5) + 'px';
@@ -123,12 +160,10 @@ function startRatEscape(originalRat) {
     rat.style.opacity = '0';
   }, 50);
 
-  // 5. Start Blackout as rat arrives
   setTimeout(() => {
     overlay.style.clipPath = `circle(150% at ${holeX + 30}px ${holeY + 15}px)`;
   }, 1300);
 
-  // 6. Redirect
   setTimeout(() => {
     window.location.href = 'admin.html';
   }, 2500);
@@ -137,39 +172,24 @@ function startRatEscape(originalRat) {
 let currentReviews = [];
 
 function calculateTotalScore(review) {
-  // Formula: 0.5 * food + 0.25 * ambience + 0.25 * service
   return (0.5 * review.essen + 0.25 * review.ambiente + 0.25 * review.service).toFixed(1);
 }
 
 async function loadReviewsFromSupabase() {
   const container = document.getElementById('reviews-list');
-  console.log("Versuche Protokolle von Supabase zu laden...");
-
-  if (SUPABASE_URL.includes('DEINE-URL')) {
-    container.innerHTML = '<p class="mono">Datenbank nicht konfiguriert. Bitte Supabase-Daten in main.js eintragen!</p>';
-    return;
-  }
-
+  
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=*&order=id.desc`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
+    const { data, error } = await window.supabaseClient
+      .from('reviews')
+      .select('*')
+      .order('id', { ascending: false });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Supabase API Fehler:", errorText);
-      throw new Error(`HTTP Fehler! Status: ${response.status}`);
-    }
+    if (error) throw error;
 
-    currentReviews = await response.json();
+    currentReviews = data;
     
-    // Update dynamic date on home page if element exists
     const lastAuditDisplay = document.getElementById('last-audit-date');
     if (lastAuditDisplay && currentReviews.length > 0) {
-      // Find latest date (first entry because of order=id.desc)
       const latestReview = currentReviews[0];
       const date = new Date(latestReview.created_at);
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -181,7 +201,9 @@ async function loadReviewsFromSupabase() {
     if (container) renderReviews(currentReviews);
   } catch (error) {
     console.error("Ladefehler:", error);
-    container.innerHTML = `<p class="mono">Fehler beim Laden: ${error.message}<br>Prüfe die Browser-Konsole (F12) für Details.</p>`;
+    if (container) {
+        container.innerHTML = `<p class="mono">Fehler beim Laden: ${error.message}</p>`;
+    }
   }
 }
 
@@ -194,7 +216,7 @@ function renderReviews(reviews) {
     return;
   }
 
-  container.innerHTML = ''; // Leeren
+  container.innerHTML = '';
   reviews.forEach(review => {
     const gesamt = calculateTotalScore(review);
     const card = document.createElement('div');
@@ -240,4 +262,3 @@ function renderReviews(reviews) {
     container.appendChild(card);
   });
 }
-

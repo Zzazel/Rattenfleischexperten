@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline - Rattenfleischexperten</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="main.js" defer></script>
+    <style>
+        .timeline-container { position: relative; padding: 2rem 0; }
+        .timeline-container::before { content: ''; position: absolute; left: 50%; width: 2px; height: 100%; background: var(--border-color); transform: translateX(-50%); opacity: 0.2; }
+        
+        .timeline-item { position: relative; margin-bottom: 4rem; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .timeline-dot { width: 12px; height: 12px; background: var(--border-color); border-radius: 50%; z-index: 2; margin-bottom: 1rem; }
+        .timeline-item.next .timeline-dot { background: var(--primary-color); box-shadow: 0 0 10px var(--primary-color); transform: scale(1.5); }
+        
+        .timeline-card { width: 100%; max-width: 500px; transition: transform 0.3s ease; }
+        .timeline-card:hover { transform: translateY(-5px); }
+        
+        .status-badge { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.65rem; font-family: var(--font-mono); font-weight: 900; margin-bottom: 0.5rem; border: 1px solid var(--border-color); }
+        .status-past { opacity: 0.5; }
+        .status-next { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .status-upcoming { background: var(--secondary-color); }
+
+        .date-label { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent-color); }
+    </style>
+</head>
+<body>
+    <header class="glass">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="index.html" style="font-size: 1.1rem; font-weight: 900; border: none; display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="mono" style="color: var(--primary-color)">[RFE]</span>
+                    <span>Rattenfleischexperten</span>
+                </a>
+            </div>
+            <nav class="mono">
+                <a href="protocols.html">Protokolle</a>
+                <a href="timeline.html" style="color: var(--primary-color); font-weight: bold;">Timeline</a>
+                <a href="council.html">Der Rat</a>
+                <a href="manifesto.html">Manifest</a>
+                <button id="theme-toggle" style="padding: 0.2rem 0.4rem; font-size: 0.8rem; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);">TAG</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="ratometer-global-container">
+        <div class="ratometer-fill" data-state="default"></div>
+        <span class="mono" style="position: absolute; left: 1rem; font-size: 0.7rem; opacity: 0.4; pointer-events: none;">RAT_INTENSITY_INDEX</span>
+    </div>
+
+    <main style="padding: 4rem 0;">
+        <section class="container">
+            <h2 class="mono" style="margin-bottom: 3rem; font-size: 1.5rem; border-bottom: 1px solid var(--text-color); display: inline-block;">
+                EINSATZ_ZEITSTRAHL
+            </h2>
+            
+            <div id="timeline-list" class="timeline-container">
+                <p class="mono">Analysiere Zeit-Raum-Koordinaten...</p>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Wait a bit for window.supabaseClient to be ready if needed
+            const checkClient = setInterval(async () => {
+                if (window.loadTimelineData) {
+                    clearInterval(checkClient);
+                    const data = await window.loadTimelineData();
+                    renderTimeline(data);
+                }
+            }, 100);
+        });
+
+        function renderTimeline(data) {
+            const container = document.getElementById('timeline-list');
+            if (!data || (data.lastPast.length === 0 && data.nextOne.length === 0 && data.following.length === 0)) {
+                container.innerHTML = '<p class="mono">[FEHLER: KEINE_DATEN_VORHANDEN]</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            const allItems = [...data.lastPast, ...data.nextOne, ...data.following];
+            
+            allItems.forEach(item => {
+                const dateObj = new Date(item.visit_date);
+                const dateStr = dateObj.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                
+                const itemEl = document.createElement('div');
+                itemEl.className = `timeline-item ${item.status}`;
+                
+                let statusLabel = '';
+                if (item.status === 'past') statusLabel = '[AUSGEFÜHRT]';
+                if (item.status === 'next') statusLabel = '[NÄCHSTE_PRÜFUNG]';
+                if (item.status === 'upcoming') statusLabel = '[GEPLANT]';
+
+                itemEl.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card card">
+                        <div class="status-badge status-${item.status}">${statusLabel}</div>
+                        <div class="date-label">${dateStr}</div>
+                        <h3 style="margin-bottom: 1rem;">${item.lokal}</h3>
+                        
+                        ${item.maps_url ? `
+                            <div style="height: 200px; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+                                <iframe src="${item.maps_url}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                        ` : ''}
+                        
+                        ${item.status === 'past' ? `
+                            <a href="protocols.html" class="mono" style="font-size: 0.7rem;">PROTOKOLL_EINSEHEN &rarr;</a>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(itemEl);
+            });
+        }
+    </script>
+
+    <footer style="margin-top: auto; padding: 4rem 0; border-top: 1.5px solid var(--border-color); text-align: center;">
+        <div class="container">
+            <p class="mono" style="font-size: 0.8rem; margin-bottom: 1.5rem; opacity: 0.6;">
+                &copy; 2026 RATTENFLEISCHEXPERTEN.
+            </p>
+            <div class="mono" style="display: flex; gap: 2rem; justify-content: center; font-size: 0.75rem; font-weight: 700;">
+                <a href="https://www.tiktok.com/@rattenfleischexperten?_r=1&_t=ZN-957BZkPvYYA" target="_blank">TIKTOK</a>
+                <a href="https://www.instagram.com/rattenfleischexperten?igsh=bmtjZGljNmI3Z3c2" target="_blank">INSTAGRAM</a>
+                <a href="mailto:rattenfleisch69@gmail.com">EMAIL</a>
+                <span class="subtle">V1.0.0-NAGER</span>
+            </div>
+            <div style="margin-top: 3rem; opacity: 0.2; font-size: 1.5rem; cursor: pointer;">
+                🐀
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

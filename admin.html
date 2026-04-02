@@ -12,10 +12,12 @@
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="main.js" defer></script>
     <style>
         input, textarea { width: 100%; padding: 0.5rem; margin-bottom: 1rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); font-family: var(--font-mono); }
-        .admin-item { border: 1px solid var(--border-color); padding: 1rem; margin-bottom: 1rem; border-radius: 4px; }
+        .admin-item { border: 1px solid var(--border-color); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 4px; background: var(--secondary-color); }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
     </style>
 </head>
 <body>
@@ -27,10 +29,14 @@
                     <span>Rattenfleischexperten</span>
                 </a>
             </div>
-            <nav class="mono">
+            <nav class="mono" style="display: flex; align-items: center; gap: 1.5rem;">
                 <a href="protocols.html">Protokolle</a>
+                <a href="timeline.html">Timeline</a>
                 <a href="council.html">Der Rat</a>
                 <a href="manifesto.html">Manifest</a>
+                <div id="admin-controls" style="display: none; align-items: center; gap: 1rem;">
+                    <button id="logout-btn" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; background: #e74c3c; border-color: #e74c3c; color: white;">LOGOUT</button>
+                </div>
                 <button id="theme-toggle" style="padding: 0.2rem 0.4rem; font-size: 0.8rem; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);">TAG</button>
             </nav>
         </div>
@@ -39,21 +45,32 @@
     <div class="ratometer-global-container">
         <div class="ratometer-fill" data-state="default"></div>
         <span class="mono" style="position: absolute; left: 1rem; font-size: 0.7rem; opacity: 0.4; pointer-events: none;">RAT_INTENSITY_INDEX</span>
-        <span class="mono" style="position: absolute; left: 500px; font-size: 1.2rem; color: var(--secondary-color); pointer-events: none;">Das krasse Geheimnis des Ratcliffs ist:   Verarscht du HS!</span>
+        <span class="mono" style="position: absolute; left: 180px; font-size: 1.2rem; color: var(--secondary-color); pointer-events: none;">Das krasse Geheimnis des Ratcliffs ist: Ein rattiges Mindset.</span>
     </div>
 
-    <div id="login-screen" class="container" style="padding: 10rem 0; text-align: center;">
+    <div id="loading-overlay" class="container" style="display: none; padding: 10rem 0; text-align: center;">
+        <h2 class="mono" style="animation: pulse 1.5s infinite;">NAGER_ZERTIFIZIERUNG_WIRD_GEPRÜFT...</h2>
+        <p class="mono" style="opacity: 0.5; margin-top: 1rem;">[SYSTEM_CHECK_IN_PROGRESS]</p>
+    </div>
+
+    <div id="login-screen" class="container" style="display: none; padding: 10rem 0; text-align: center;">
         <h2 class="mono">ADMIN LOGIN</h2>
-        <input type="password" id="password" placeholder="Passwort" style="max-width: 300px; margin: 2rem auto; display: block;">
-        <button id="login-btn" class="mono">EINTRETEN</button>
+        <button id="login-google-btn" class="mono" style="margin-top: 2rem;">LOGIN MIT GOOGLE</button>
+    </div>
+
+    <div id="unauthorized-screen" class="container" style="display: none; padding: 10rem 0; text-align: center;">
+        <h2 class="mono" style="color: #e74c3c;">ZUGRIFF VERWEIGERT</h2>
+        <p class="mono" style="margin: 2rem 0; opacity: 0.7;">Dein Account (<span id="user-email-display"></span>) ist nicht für den Rat autorisiert.</p>
+        <button id="switch-account-btn" class="mono">ACCOUNT WECHSELN</button>
     </div>
 
     <div id="admin-panel" class="container" style="display: none; padding: 4rem 0;">
         <h2 class="mono" style="margin-bottom: 2rem;">PROTOKOLL MANAGEMENT (SUPABASE)</h2>
         <div class="card" style="margin-bottom: 3rem;">
             <h3 class="mono">NEUES LOKAL HINZUFÜGEN</h3>
-            <div style="display: grid; grid-template-columns: 1fr 100px; gap: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 100px; gap: 1rem;">
                 <input type="text" id="new-lokal" placeholder="Name des Lokals">
+                <input type="date" id="new-visit-date" placeholder="Besuchsdatum (Timeline)">
                 <input type="number" id="new-cost" placeholder="Kosten CHF" step="0.5">
             </div>
             <input type="text" id="new-maps" placeholder="Google Maps Embed URL (src)">
@@ -62,62 +79,95 @@
                 <input type="number" id="new-service" placeholder="Service (0-5)" min="0" max="5">
                 <input type="number" id="new-ambiente" placeholder="Ambiente (0-5)" min="0" max="5">
             </div>
-            <textarea id="new-notitz" placeholder="Notitz" rows=""></textarea>
+            <textarea id="new-notitz" placeholder="Notitz" rows="5"></textarea>
             <button id="add-btn" class="mono">HINZUFÜGEN</button>
         </div>
         <div id="edit-list"></div>
     </div>
 
     <script>
-        // --- KONFIGURATION (Muss gleich sein wie in main.js) ---
-        const SUPABASE_URL = 'https://lezkdohngzxvuszcwcuj.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_KPIUCuONZw1laeyPpT4e_g_cwf06Fcb';
-        const ADMIN_HASH = 'd72acedf10dcfba58c0f6018067affc36e341bb33c2dcce56cf516df4507ae20'; // SHA-256 for 'ratte'
-        // ------------------------------------------------------
+        let reviews = [];
+        let authCheckActive = false;
 
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
+        function showScreen(screenId) {
+            const screens = ['login-screen', 'admin-panel', 'unauthorized-screen', 'loading-overlay'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = (id === screenId) ? 'block' : 'none';
+            });
+            const controls = document.getElementById('admin-controls');
+            if (controls) {
+                controls.style.display = (screenId === 'admin-panel' || screenId === 'unauthorized-screen') ? 'flex' : 'none';
+            }
         }
 
-        let reviews = [];
+        async function performAuthCheck(session, skipLoading = false) {
+            if (authCheckActive) return;
+            authCheckActive = true;
+            if (!skipLoading) showScreen('loading-overlay');
+            
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('reviews')
+                    .select('*')
+                    .order('id', { ascending: false });
 
-        document.getElementById('login-btn').addEventListener('click', async () => {
-            const input = document.getElementById('password').value;
-            const hashedInput = await sha256(input);
-
-            if (hashedInput === ADMIN_HASH) {
-                window.adminLoggedIn = true;
-                window.updateRatometer();
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                loadAdminReviews();
-            } else {
-                alert('Falsches Passwort!');
+                if (error) {
+                    console.warn("Auth check blocked by RLS:", error.message);
+                    document.getElementById('user-email-display').textContent = session.user.email;
+                    showScreen('unauthorized-screen');
+                } else {
+                    reviews = data || [];
+                    renderAdminList();
+                    showScreen('admin-panel');
+                }
+            } catch (e) {
+                console.error("Auth Exception:", e);
+                showScreen('unauthorized-screen');
+            } finally {
+                authCheckActive = false;
             }
-        });
+        }
 
-        async function loadAdminReviews() {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=*&order=id.desc`, {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        async function init() {
+            if (!window.supabaseClient) {
+                setTimeout(init, 100);
+                return;
+            }
+
+            // Initial session check - skip loading if possible
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session) {
+                await performAuthCheck(session, true);
+            } else {
+                showScreen('login-screen');
+            }
+
+            // Real-time changes - only act on meaningful state changes
+            window.supabaseClient.auth.onAuthStateChange(async (event, session) => {
+                if (event === 'SIGNED_IN') {
+                    // Only show loading if we aren't already on the admin panel
+                    const currentDisplay = document.getElementById('admin-panel').style.display;
+                    await performAuthCheck(session, currentDisplay === 'block');
+                } else if (event === 'SIGNED_OUT') {
+                    showScreen('login-screen');
+                }
+                // Ignore INITIAL_SESSION, TOKEN_REFRESHED, and focus events to prevent flickering
             });
-            reviews = await res.json();
-            renderAdminList();
         }
 
         function renderAdminList() {
             const container = document.getElementById('edit-list');
+            if (!container) return;
             container.innerHTML = '<h3 class="mono">EXISTIERENDE EINTRÄGE</h3>';
-            reviews.forEach((r, index) => {
+            reviews.forEach((r) => {
                 const item = document.createElement('div');
                 item.className = 'admin-item';
                 item.innerHTML = `
                     <p class="mono subtle">ID: ${r.id}</p>
-                    <div style="display: grid; grid-template-columns: 1fr 100px; gap: 1rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 100px; gap: 1rem;">
                         <input type="text" value="${r.lokal}" id="edit-lokal-${r.id}">
+                        <input type="date" value="${r.visit_date || ''}" id="edit-visit-date-${r.id}">
                         <input type="number" value="${r.cost || 0}" id="edit-cost-${r.id}" step="0.5">
                     </div>
                     <input type="text" value="${r.maps_url || ''}" id="edit-maps-${r.id}" placeholder="Google Maps Embed URL">
@@ -136,9 +186,11 @@
             });
         }
 
-        async function updateReview(id) {
+        window.updateReview = async function(id) {
+            const visitDate = document.getElementById(`edit-visit-date-${id}`).value;
             const updatedData = {
                 lokal: document.getElementById(`edit-lokal-${id}`).value,
+                visit_date: visitDate || null,
                 cost: parseFloat(document.getElementById(`edit-cost-${id}`).value),
                 maps_url: document.getElementById(`edit-maps-${id}`).value,
                 essen: parseInt(document.getElementById(`edit-essen-${id}`).value),
@@ -146,42 +198,59 @@
                 ambiente: parseInt(document.getElementById(`edit-ambiente-${id}`).value),
                 notitz: document.getElementById(`edit-notitz-${id}`).value
             };
-            await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedData)
-            });
-            alert('Aktualisiert!');
-            loadAdminReviews();
+            const { error } = await window.supabaseClient.from('reviews').update(updatedData).eq('id', id);
+            if (error) alert('Fehler: ' + error.message);
+            else { alert('Aktualisiert!'); refresh(); }
         }
 
-        async function deleteReview(id) {
-            if (confirm('Löschen?')) {
-                await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                });
-                loadAdminReviews();
+        window.deleteReview = async function(id) {
+            if (confirm('Wirklich löschen?')) {
+                const { error } = await window.supabaseClient.from('reviews').delete().eq('id', id);
+                if (error) alert('Fehler: ' + error.message);
+                else refresh();
             }
         }
 
-        document.getElementById('add-btn').addEventListener('click', async () => {
-            const newEntry = {
-                lokal: document.getElementById('new-lokal').value,
-                cost: parseFloat(document.getElementById('new-cost').value) || 0,
-                maps_url: document.getElementById('new-maps').value,
-                essen: parseInt(document.getElementById('new-essen').value) || 0,
-                service: parseInt(document.getElementById('new-service').value) || 0,
-                ambiente: parseInt(document.getElementById('new-ambiente').value) || 0,
-                notitz: document.getElementById('new-notitz').value || '(leer)'
-            };
-            await fetch(`${SUPABASE_URL}/rest/v1/reviews`, {
-                method: 'POST',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(newEntry)
+        async function refresh() {
+            const { data } = await window.supabaseClient.from('reviews').select('*').order('id', { ascending: false });
+            reviews = data || [];
+            renderAdminList();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+
+            document.getElementById('login-google-btn').addEventListener('click', async () => {
+                await window.supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { redirectTo: window.location.origin + window.location.pathname }
+                });
             });
-            alert('Hinzugefügt!');
-            loadAdminReviews();
+
+            const logoutAction = async () => {
+                await window.supabaseClient.auth.signOut();
+                window.location.reload();
+            };
+
+            document.getElementById('logout-btn').addEventListener('click', logoutAction);
+            document.getElementById('switch-account-btn').addEventListener('click', logoutAction);
+
+            document.getElementById('add-btn').addEventListener('click', async () => {
+                const visitDate = document.getElementById('new-visit-date').value;
+                const newEntry = {
+                    lokal: document.getElementById('new-lokal').value,
+                    visit_date: visitDate || null,
+                    cost: parseFloat(document.getElementById('new-cost').value) || 0,
+                    maps_url: document.getElementById('new-maps').value,
+                    essen: parseInt(document.getElementById('new-essen').value) || 0,
+                    service: parseInt(document.getElementById('new-service').value) || 0,
+                    ambiente: parseInt(document.getElementById('new-ambiente').value) || 0,
+                    notitz: document.getElementById('new-notitz').value || '(leer)'
+                };
+                const { error } = await window.supabaseClient.from('reviews').insert([newEntry]);
+                if (error) alert('Fehler: ' + error.message);
+                else { alert('Hinzugefügt!'); refresh(); }
+            });
         });
     </script>
     <footer style="margin-top: auto; padding: 4rem 0; border-top: 1.5px solid var(--border-color); text-align: center;">
