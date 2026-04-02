@@ -91,14 +91,14 @@ window.loadTimelineData = async function() {
         const past = data.filter(r => r.visit_date < todayStr);
         const upcoming = data.filter(r => r.visit_date >= todayStr);
 
-        // Group 1: Most recent past (last item in past list)
-        const lastPast = past.length > 0 ? [past[past.length - 1]] : [];
+        // Group 1: All past reviews (ordered chronological by query)
+        const lastPast = past;
         
         // Group 2: Next upcoming (first item in upcoming list)
         const nextOne = upcoming.length > 0 ? [upcoming[0]] : [];
         
-        // Group 3: Following 4 upcoming
-        const following = upcoming.length > 1 ? upcoming.slice(1, 5) : [];
+        // Group 3: Following upcoming
+        const following = upcoming.length > 1 ? upcoming.slice(1) : [];
 
         return {
             lastPast: lastPast.map(r => ({ ...r, status: 'past' })),
@@ -254,7 +254,7 @@ function renderReviews(reviews) {
       `}
 
       <div class="review-note">
-        ${review.notitz}
+        ${review.notiz}
       </div>
       
       <div class="rat-mark">🐀</div>

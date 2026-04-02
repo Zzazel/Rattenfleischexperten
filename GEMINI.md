@@ -15,8 +15,8 @@
 
 ## Core Features & v1.0.0 Mechanics
 - **The Global Ratometer:** A persistent 24px bar positioned immediately below the header. It follows a 3-stage animation:
-  1. **Stage 1 (Global):** 0-67% slow fill (4s) on normal pages.
-  2. **Stage 2 (Admin Login):** 67-100% tense fill (3s) on `admin.html` before login.
+  1. **Stage 1 (Global):** 0-67% slow fill (90s) on normal pages.
+  2. **Stage 2 (Admin Login):** 67-100% tense fill (10s) on `admin.html` before login.
   3. **Stage 3 (Logged In):** 100-130% "overdrive" burst with a glow effect after login.
 - **Secret Admin Access:** 3-clicks on the footer rat triggers the "Rat Escape" animation to the top-left, followed by a blackout transition to `admin.html`.
 - **Scoping Bridge:** `adminLoggedIn` and `updateRatometer` are explicitly attached to the `window` object in `main.js` to ensure reliable communication between scripts and the `admin.html` login logic.
