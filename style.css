@@ -331,8 +331,15 @@ nav a:hover, nav a[style*="bold"] {
   pointer-events: none;
 }
 
-/* Mobile */
-@media (max-width: 768px) {
+/* Laptop/Tablet Optimierung: Index Text früher ausblenden um Überlappung mit Geheimtext zu verhindern */
+@media (max-width: 1400px) and (min-width: 901px) {
+  .ratometer-global-container span:first-of-type {
+    display: none;
+  }
+}
+
+/* Mobile Vertical Ratometer - Wechselt jetzt früher (ab 900px) */
+@media (max-width: 900px) {
   .container { padding: 0 1rem; }
   .protocol-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .card { padding: 1.5rem; }
@@ -341,6 +348,64 @@ nav a:hover, nav a[style*="bold"] {
     flex-direction: column;
     gap: 1.25rem;
     text-align: center;
+  }
+
+  /* The Switch to Vertical */
+  .ratometer-global-container {
+    width: 24px;
+    height: 180px;
+    position: fixed;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    border-left: 3px solid var(--border-color);
+    border-right: none;
+    border-top: 3px solid var(--border-color);
+    border-bottom: 3px solid var(--border-color);
+    margin: 0;
+    overflow: hidden;
+    flex-direction: column-reverse; /* Fill from bottom */
+    display: flex;
+    background: var(--secondary-color);
+  }
+
+  .ratometer-global-container::before,
+  .ratometer-global-container::after {
+    display: none; /* Hide seam lines in vertical mode */
+  }
+
+  .ratometer-fill {
+    width: 100% !important;
+    height: 0%;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    transition: height 0.5s ease-in-out;
+  }
+
+  /* Vertical Animations */
+  .ratometer-fill[data-state="default"] { animation: vFillGlobal 90s forwards; }
+  .ratometer-fill[data-state="admin"] { animation: vFillAdmin 10s forwards; }
+  .ratometer-fill[data-state="logged-in"] { animation: vFillOverdrive 4s forwards; }
+
+  @keyframes vFillGlobal { 0% { height: 0%; } 100% { height: 67%; } }
+  @keyframes vFillAdmin { 0% { height: 67%; } 100% { height: 100%; } }
+  @keyframes vFillOverdrive { 0% { height: 100%; } 100% { height: 130%; } }
+
+  /* Rotate Labels for Vertical Bar */
+  .ratometer-global-container span {
+    transform: rotate(-90deg);
+    transform-origin: left bottom;
+    left: 18px;
+    bottom: 10px;
+    font-size: 0.6rem !important;
+    white-space: nowrap;
+    display: block !important;
+  }
+
+  /* Hide longer secret messages on mobile vertical bar - they don't fit */
+  .ratometer-global-container span:nth-of-type(2) {
+    display: none !important;
   }
 }
 

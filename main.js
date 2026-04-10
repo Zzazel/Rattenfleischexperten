@@ -255,7 +255,7 @@ function renderReviews(reviews) {
       `}
 
       <div class="review-note">
-        ${review.notiz}
+        ${review.notitz}
       </div>
       
       <div class="rat-mark">🐀</div>
